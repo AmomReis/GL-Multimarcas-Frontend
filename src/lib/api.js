@@ -81,6 +81,18 @@ export const api = {
     jsonRequest('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, senha }) }),
   registrar: (nome, email, senha) =>
     jsonRequest('/api/auth/registrar', { method: 'POST', body: JSON.stringify({ nome, email, senha }) }),
+  
+  // Admin — produtos
+  criarProduto: (dadosProduto, arquivoImagem) => {
+    const formData = new FormData()
+    formData.append('dados', new Blob([JSON.stringify(dadosProduto)], { type: 'application/json' }))
+    if (arquivoImagem) formData.append('imagem', arquivoImagem)
+    // Sem Content-Type manual: o navegador define o boundary do multipart sozinho.
+    return apiFetch('/api/produtos', { method: 'POST', body: formData })
+  },
+  atualizarProduto: (id, dadosProduto) =>
+    jsonRequest(`/api/produtos/${id}`, { method: 'PUT', body: JSON.stringify(dadosProduto) }),
+  excluirProduto: (id) => apiFetch(`/api/produtos/${id}`, { method: 'DELETE' }),
 }
 
 export const CATEGORIAS = [
