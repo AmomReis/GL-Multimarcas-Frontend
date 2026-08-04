@@ -1,36 +1,52 @@
 import { Link } from 'react-router-dom'
-import Marquee from './Marquee'
-import logo from '../assets/logo.png'
+import { IconCrown, IconStar } from './icons'
+
+// Placeholder — troque pela foto real do catálogo/campanha da GL assim que tiver uma.
+const IMAGEM_HERO = 'https://images.hostinger.com/9fd9a776-bd91-470d-95fa-a3a743569961.png'
 
 export default function Hero() {
   return (
     <section id="topo" className="hero">
       <div className="hero__glow" aria-hidden="true" />
       <div className="hero__content">
-        <img src={logo} alt="GL Multimarcas" className="hero__logo" />
+        <span className="hero__badge">
+          <IconCrown className="hero__badge-icon" aria-hidden="true" />
+          Coleção 2025
+        </span>
 
-        <p className="eyebrow">GL MULTIMARCAS · LOJA DE ROUPAS</p>
         <h1 className="hero__title">
-          VISTA-SE
+          VISTA-SE COMO 
           <br />
-          COMO <span className="text-gold">QUEM MANDA</span>
+          <span className="text-gold-shine">QUEM MANDA</span>
         </h1>
+
+        <div className="hero__divider" aria-hidden="true" />
+
         <p className="hero__subtitle">
-          Curadoria de várias marcas em um só lugar. Streetwear, social e
-          básicos essenciais — selecionados pra quem tem estilo próprio e
-          não segue padrão.
+          Nike, Adidas, Lacoste, Diesel e outras grifes selecionadas.
+          Autenticidade garantida, entrega rápida e atendimento de verdade.
         </p>
-        <div className="hero__actions">
+
+        <div className="hero__actions hero__actions--stack">
           <Link to="/loja" className="btn btn--gold btn--lg">
-            Ver loja
+            Ver catálogo →
           </Link>
-          <a href="#marcas" className="btn btn--ghost btn--lg">
-            Conhecer as marcas
-          </a>
+          <Link to="/loja?destaque=1" className="btn btn--outline btn--lg">
+            Ofertas da semana
+          </Link>
+        </div>
+
+        <div className="hero__media">
+          <img src={IMAGEM_HERO} alt="Modelo vestindo peça da curadoria GL Multimarcas" />
+          <div className="hero__stat">
+            <span className="hero__stat-nota">
+              <IconStar className="hero__stat-star" aria-hidden="true" />
+              4.9/5
+            </span>
+            <span className="hero__stat-legenda">+2.400 clientes</span>
+          </div>
         </div>
       </div>
-
-      <Marquee />
     </section>
   )
 }

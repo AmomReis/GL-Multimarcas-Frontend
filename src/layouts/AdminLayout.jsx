@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo.png'
 import { IconGrid, IconBox, IconClipboard, IconLogout, IconMenu } from '../components/admin/AdminIcons'
-import '../styles/admin.css'
+import '../styles/Admin.css'
 
 const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: IconGrid, end: true },

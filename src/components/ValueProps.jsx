@@ -1,26 +1,35 @@
+import { IconShield, IconTruck, IconCard, IconRefresh } from './icons'
+
 const itens = [
   {
-    titulo: 'Autenticidade garantida',
-    texto: 'Todas as marcas parceiras passam por curadoria antes de entrar na vitrine.',
+    icone: IconShield,
+    titulo: '100% originais',
+    texto: 'Peças conferidas uma a uma.',
   },
   {
-    titulo: 'Troca sem burocracia',
-    texto: 'Não serviu ou não curtiu? Você tem 30 dias pra trocar, sem enrolação.',
+    icone: IconTruck,
+    titulo: 'Frete grátis',
+    texto: 'Acima de R$ 299 para todo o Brasil.',
   },
   {
-    titulo: 'Entrega para todo o Brasil',
-    texto: 'Enviamos pra qualquer estado, com frete grátis acima de R$ 300.',
+    icone: IconCard,
+    titulo: 'Até 3x sem juros',
+    texto: 'Pagamento seguro e criptografado.',
+  },
+  {
+    icone: IconRefresh,
+    titulo: 'Troca fácil',
+    texto: '30 dias para trocar ou devolver.',
   },
 ]
 
 export default function ValueProps() {
   return (
     <section id="diferenciais" className="value-props">
-      <p className="section-label">Por que a GL</p>
       <div className="value-props__grid">
-        {itens.map((item, i) => (
+        {itens.map((item) => (
           <div className="value-props__item" key={item.titulo}>
-            <span className="value-props__mark">{String(i + 1).padStart(2, '0')}</span>
+            <item.icone className="value-props__icon" aria-hidden="true" />
             <h3>{item.titulo}</h3>
             <p>{item.texto}</p>
           </div>

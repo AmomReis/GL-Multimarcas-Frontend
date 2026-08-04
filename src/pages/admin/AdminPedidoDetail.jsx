@@ -59,6 +59,17 @@ export default function AdminPedidoDetail() {
           <StatusBadge status={pedido.status} />
         </div>
 
+        <div className="conta-info" style={{ marginBottom: '1.4rem' }}>
+            <p>
+                <span>Cliente</span>
+                {pedido.cliente?.nome}
+            </p>
+            <p>
+                <span>E-mail</span>
+                {pedido.cliente?.email}
+            </p>
+        </div>
+
         <div className="admin-table-wrap">
           <table className="admin-table">
             <thead>

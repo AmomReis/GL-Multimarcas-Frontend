@@ -44,3 +44,90 @@ export function IconBag(props) {
     </svg>
   )
 }
+
+/* ---------- Novos ícones (redesign estilo "coroa") ---------- */
+
+export function IconMenu(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M4 7h16" />
+      <path d="M4 12h16" />
+      <path d="M4 17h16" />
+    </svg>
+  )
+}
+
+export function IconClose(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M6 6l12 12" />
+      <path d="M18 6 6 18" />
+    </svg>
+  )
+}
+
+export function IconShield(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 3.5 19 6v6c0 4.2-3 7.4-7 8.5-4-1.1-7-4.3-7-8.5V6Z" />
+      <path d="M9 12l2 2 4-4.3" />
+    </svg>
+  )
+}
+
+export function IconTruck(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M3 7h11v9H3z" />
+      <path d="M14 11h4l3 3v2h-7z" />
+      <circle cx="7.5" cy="18" r="1.6" />
+      <circle cx="17.5" cy="18" r="1.6" />
+    </svg>
+  )
+}
+
+export function IconCard(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="6" width="18" height="13" rx="2" />
+      <path d="M3 10.5h18" />
+      <path d="M7 15h4" />
+    </svg>
+  )
+}
+
+export function IconRefresh(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M4 12a8 8 0 0 1 13.66-5.66L20 8" />
+      <path d="M20 4v4h-4" />
+      <path d="M20 12a8 8 0 0 1-13.66 5.66L4 16" />
+      <path d="M4 20v-4h4" />
+    </svg>
+  )
+}
+
+export function IconStar(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
+      <path d="M12 2.5l2.9 6 6.6.7-4.9 4.6 1.3 6.5L12 16.9l-5.9 3.4 1.3-6.5-4.9-4.6 6.6-.7Z" />
+    </svg>
+  )
+}
+
+export function IconSearch(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  )
+}
+
+export function IconChevronDown(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  )
+}
