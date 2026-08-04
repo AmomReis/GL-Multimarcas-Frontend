@@ -90,7 +90,7 @@ export default function AdminProdutos() {
               <tbody>
                 {filtrados.map((produto, i) => (
                   <tr key={produto.id} style={{ animationDelay: `${i * 35}ms` }}>
-                    <td>
+                    <td className="admin-table__cell--header">
                       <div className="admin-table__produto">
                         <div className="admin-table__thumb">
                           {produto.imagemUrl ? (
@@ -105,14 +105,14 @@ export default function AdminProdutos() {
                         </div>
                       </div>
                     </td>
-                    <td>{CATEGORIA_LABEL[produto.categoria] || produto.categoria}</td>
-                    <td>{formatPrice(produto.preco)}</td>
-                    <td>
+                    <td data-label="Categoria">{CATEGORIA_LABEL[produto.categoria] || produto.categoria}</td>
+                    <td data-label="Preço">{formatPrice(produto.preco)}</td>
+                    <td data-label="Estoque">
                       <span className={`admin-badge ${produto.estoque <= 5 ? 'admin-badge--cancelado' : 'admin-badge--pago'}`}>
                         {produto.estoque} un.
                       </span>
                     </td>
-                    <td>
+                    <td className="admin-table__cell--actions">
                       <div className="admin-table__actions">
                         <Link to={`/admin/produtos/${produto.id}/editar`} className="admin-icon-btn" aria-label="Editar">
                           <IconEdit />

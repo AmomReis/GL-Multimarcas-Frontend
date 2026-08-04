@@ -83,10 +83,10 @@ export default function AdminPedidoDetail() {
             <tbody>
               {pedido.itens.map((item) => (
                 <tr key={item.produtoId}>
-                  <td>{item.nomeProduto}</td>
-                  <td>{item.quantidade}</td>
-                  <td>{formatPrice(item.precoUnitario)}</td>
-                  <td>{formatPrice(item.subtotal)}</td>
+                  <td className="admin-table__cell--header">{item.nomeProduto}</td>
+                  <td data-label="Qtd.">{item.quantidade}</td>
+                  <td data-label="Preço unit.">{formatPrice(item.precoUnitario)}</td>
+                  <td data-label="Subtotal">{formatPrice(item.subtotal)}</td>
                 </tr>
               ))}
             </tbody>

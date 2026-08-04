@@ -51,9 +51,9 @@ export default function AdminPedidos() {
             <input type="text" placeholder="Buscar por ID do pedido..." value={busca} onChange={(e) => setBusca(e.target.value)} />
           </div>
           <select
+            className="admin-select"
             value={statusFiltro}
             onChange={(e) => setStatusFiltro(e.target.value)}
-            style={{ padding: '0.6rem 1rem', borderRadius: '999px', border: '1px solid var(--card-border)', background: 'var(--bg-elev)', color: 'var(--cream)', fontSize: '0.85rem' }}
           >
             {STATUS_FILTROS.map((s) => (
               <option key={s} value={s}>
@@ -94,15 +94,15 @@ export default function AdminPedidos() {
               <tbody>
                 {filtrados.map((pedido, i) => (
                   <tr key={pedido.id} style={{ animationDelay: `${i * 35}ms` }}>
-                    <td>
+                    <td className="admin-table__cell--header">
                       <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
                     </td>
-                    <td>{formatData(pedido.criadoEm)}</td>
-                    <td>{pedido.itens?.length ?? 0}</td>
-                    <td>
+                    <td data-label="Data">{formatData(pedido.criadoEm)}</td>
+                    <td data-label="Itens">{pedido.itens?.length ?? 0}</td>
+                    <td data-label="Status">
                       <StatusBadge status={pedido.status} />
                     </td>
-                    <td>{formatPrice(pedido.total)}</td>
+                    <td data-label="Total">{formatPrice(pedido.total)}</td>
                   </tr>
                 ))}
               </tbody>
