@@ -108,6 +108,17 @@ export function IconCash(props) {
   )
 }
 
+export function IconTruck(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M2.5 6.5h11v10h-11Z" />
+      <path d="M13.5 10h4l4 3.5v3h-8Z" />
+      <circle cx="7" cy="18" r="1.8" />
+      <circle cx="17" cy="18" r="1.8" />
+    </svg>
+  )
+}
+
 export function IconImage(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>

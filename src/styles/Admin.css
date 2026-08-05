@@ -4,6 +4,8 @@
   --success-soft: rgba(95, 174, 127, 0.14);
   --danger-soft: rgba(224, 101, 79, 0.14);
   --pending-soft: rgba(231, 178, 51, 0.14);
+  --info: #5b8fd6;
+  --info-soft: rgba(91, 143, 214, 0.14);
 }
 
 .admin-shell {
@@ -402,6 +404,7 @@
 .admin-table__actions {
   display: flex;
   gap: 0.4rem;
+  flex-wrap: wrap;
   justify-content: flex-end;
 }
 
@@ -484,6 +487,15 @@
 .admin-badge--criado {
   background: rgba(156, 150, 137, 0.14);
   color: var(--muted);
+}
+
+.admin-badge--transito {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.admin-badge--transito::before {
+  animation: adminPulse 1.6s ease-in-out infinite;
 }
 
 @keyframes adminPulse {
@@ -672,6 +684,184 @@
   height: 40px;
   margin-bottom: 0.8rem;
   color: var(--gold-deep);
+}
+
+/* ---------- Fila de envios ---------- */
+.envios-fila {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.envios-card {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+  animation: adminFadeUp 0.4s ease both;
+}
+
+.envios-card__thumbs {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.envios-card__thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #201c15, #100f0d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--card-border);
+}
+
+.envios-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.envios-card__thumb svg {
+  width: 55%;
+  height: 55%;
+  color: var(--gold-soft);
+}
+
+.envios-card__thumb--extra {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.envios-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.envios-card__info strong {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.envios-card__data {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.envios-card__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 760px) {
+  .envios-card {
+    flex-wrap: wrap;
+  }
+
+  .envios-card__info {
+    flex-basis: 100%;
+  }
+
+  .envios-card__actions {
+    flex-basis: 100%;
+    justify-content: stretch;
+  }
+
+  .envios-card__actions .btn {
+    flex: 1;
+  }
+}
+
+/* ---------- Modal ---------- */
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+  z-index: 60;
+  animation: adminFadeIn 0.2s ease both;
+}
+
+.admin-modal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  animation: adminFadeUp 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.admin-modal__header h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.admin-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 1.3rem 0;
+}
+
+.admin-modal__opcao {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.admin-modal__opcao:hover {
+  border-color: var(--gold-deep);
+}
+
+.admin-modal__opcao input {
+  accent-color: var(--gold);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.admin-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+}
+
+@media (max-width: 480px) {
+  .admin-modal__footer {
+    flex-direction: column-reverse;
+  }
+
+  .admin-modal__footer .btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 640px) {

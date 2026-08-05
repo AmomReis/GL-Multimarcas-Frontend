@@ -77,6 +77,8 @@ export const api = {
   getPedido: (id) => apiFetch(`/api/pedidos/${id}`),
   atualizarStatusPedido: (id, status) =>
     jsonRequest(`/api/pedidos/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+  atualizarStatusEnvio: (id, statusEnvio) =>
+    jsonRequest(`/api/pedidos/${id}/envio`, { method: 'PATCH', body: JSON.stringify({ statusEnvio }) }),
 
   // Auth — ainda precisa existir no backend, ver observação abaixo
   login: (email, senha) =>
@@ -95,6 +97,14 @@ export const api = {
   atualizarProduto: (id, dadosProduto) =>
     jsonRequest(`/api/produtos/${id}`, { method: 'PUT', body: JSON.stringify(dadosProduto) }),
   excluirProduto: (id) => apiFetch(`/api/produtos/${id}`, { method: 'DELETE' }),
+}
+
+export const STATUS_ENVIO = ['PREPARANDO', 'SAIU_PARA_ENTREGA', 'ENTREGUE']
+
+export const STATUS_ENVIO_LABEL = {
+  PREPARANDO: 'Preparando pedido',
+  SAIU_PARA_ENTREGA: 'Pedido saiu para entrega',
+  ENTREGUE: 'Pedido entregue',
 }
 
 export const CATEGORIAS = [

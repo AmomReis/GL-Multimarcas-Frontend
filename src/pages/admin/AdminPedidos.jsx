@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
-import { IconClipboard, IconEdit, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
+import { IconClipboard, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
 
 function formatPrice(v) {
   return (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -32,7 +32,8 @@ export default function AdminPedidos() {
   }, [])
 
   async function handleCancelar(pedido) {
-    if (!window.confirm(`Cancelar o pedido ${pedido.id.slice(0, 8)}...? Essa ação não pode ser desfeita.`)) return
+    const referencia = pedido.cliente?.nome ? `de ${pedido.cliente.nome}` : pedido.id.slice(0, 8)
+    if (!window.confirm(`Cancelar o pedido ${referencia}? Essa ação não pode ser desfeita.`)) return
     setCancelandoId(pedido.id)
     try {
       const atualizado = await api.atualizarStatusPedido(pedido.id, 'CANCELADO')
@@ -48,7 +49,7 @@ export default function AdminPedidos() {
     const termo = busca.trim().toLowerCase()
     return pedidos
       .filter((p) => statusFiltro === 'TODOS' || p.status === statusFiltro)
-      .filter((p) => !termo || p.id.toLowerCase().includes(termo))
+      .filter((p) => !termo || p.cliente?.nome?.toLowerCase().includes(termo) || p.id.toLowerCase().includes(termo))
       .sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))
   }, [pedidos, busca, statusFiltro])
 
@@ -62,7 +63,7 @@ export default function AdminPedidos() {
         <div className="admin-toolbar">
           <div className="admin-search">
             <IconSearch />
-            <input type="text" placeholder="Buscar por ID do pedido..." value={busca} onChange={(e) => setBusca(e.target.value)} />
+            <input type="text" placeholder="Buscar por nome do cliente..." value={busca} onChange={(e) => setBusca(e.target.value)} />
           </div>
           <select
             className="admin-select"
@@ -110,7 +111,9 @@ export default function AdminPedidos() {
                 {filtrados.map((pedido, i) => (
                   <tr key={pedido.id} style={{ animationDelay: `${i * 35}ms` }}>
                     <td className="admin-table__cell--header">
-                      <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
+                      <Link to={`/admin/pedidos/${pedido.id}`}>
+                        {pedido.cliente?.nome ? `Pedido de ${pedido.cliente.nome}` : 'Pedido sem cliente identificado'}
+                      </Link>
                     </td>
                     <td data-label="Data">{formatData(pedido.criadoEm)}</td>
                     <td data-label="Itens">{pedido.itens?.length ?? 0}</td>
@@ -120,8 +123,8 @@ export default function AdminPedidos() {
                     <td data-label="Total">{formatPrice(pedido.total)}</td>
                     <td className="admin-table__cell--actions">
                       <div className="admin-table__actions">
-                        <Link to={`/admin/pedidos/${pedido.id}`} className="admin-icon-btn" aria-label="Editar status">
-                          <IconEdit />
+                        <Link to={`/admin/pedidos/${pedido.id}`} className="btn btn--outline btn--sm-inline">
+                          Detalhes do pedido
                         </Link>
                         <button
                           type="button"
