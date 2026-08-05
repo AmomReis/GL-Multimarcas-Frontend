@@ -11,7 +11,22 @@
 // pro topo quanto pra barra inferior.
 
 function ease(t) {
-  return 1 - Math.pow(1 - t, 3)
+  // easeInOutCubic: acelera e desacelera suavemente, sem pico de velocidade
+  // logo no início (como o easeOutCubic anterior tinha). Isso reduz o salto
+  // de posição entre frames em aparelhos que não sustentam 60fps — cada
+  // "degrau" da animação fica menor e menos perceptível.
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
+// Aparelhos com pouca RAM/poucos núcleos tendem a derrubar frames em
+// qualquer animação via JS, não só nessa. Nesses casos pulamos o voo e só
+// fazemos o pulso — mesma saída que já existia pra prefers-reduced-motion.
+// As APIs usadas aqui só existem no Chromium; em outros navegadores viram
+// undefined e a checagem simplesmente não dispara (assume aparelho normal).
+function aparelhoFraco() {
+  const memoria = navigator.deviceMemory
+  const nucleos = navigator.hardwareConcurrency
+  return (typeof memoria === 'number' && memoria <= 2) || (typeof nucleos === 'number' && nucleos <= 2)
 }
 
 function pulseTargets() {
@@ -40,7 +55,7 @@ export function flyToCart(mediaEl) {
   }
 
   const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (reduzMovimento) {
+  if (reduzMovimento || aparelhoFraco()) {
     pulseTargets()
     return
   }
@@ -84,7 +99,11 @@ export function flyToCart(mediaEl) {
   })
   document.body.appendChild(clone)
 
-  const duration = 700
+  // Mais lento que o normal de propósito: em celulares fracos, a mesma
+  // curva espalhada por mais tempo faz cada frame perdido pesar menos no
+  // resultado final, além de ficar com um ritmo mais "premium" (menos
+  // afobado) que 700ms.
+  const duration = 950
   const startTime = performance.now()
 
   function frame(now) {
