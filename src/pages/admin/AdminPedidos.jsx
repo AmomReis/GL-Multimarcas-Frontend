@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
-import { IconClipboard, IconSearch } from '../../components/admin/AdminIcons'
+import { IconClipboard, IconEdit, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
 
 function formatPrice(v) {
   return (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -21,6 +21,7 @@ export default function AdminPedidos() {
   const [erro, setErro] = useState(null)
   const [busca, setBusca] = useState('')
   const [statusFiltro, setStatusFiltro] = useState('TODOS')
+  const [cancelandoId, setCancelandoId] = useState(null)
 
   useEffect(() => {
     api
@@ -29,6 +30,19 @@ export default function AdminPedidos() {
       .catch((e) => setErro(e.message))
       .finally(() => setCarregando(false))
   }, [])
+
+  async function handleCancelar(pedido) {
+    if (!window.confirm(`Cancelar o pedido ${pedido.id.slice(0, 8)}...? Essa ação não pode ser desfeita.`)) return
+    setCancelandoId(pedido.id)
+    try {
+      const atualizado = await api.atualizarStatusPedido(pedido.id, 'CANCELADO')
+      setPedidos((prev) => prev.map((p) => (p.id === atualizado.id ? atualizado : p)))
+    } catch (e) {
+      alert(`Não foi possível cancelar: ${e.message}`)
+    } finally {
+      setCancelandoId(null)
+    }
+  }
 
   const filtrados = useMemo(() => {
     const termo = busca.trim().toLowerCase()
@@ -89,6 +103,7 @@ export default function AdminPedidos() {
                   <th>Itens</th>
                   <th>Status</th>
                   <th>Total</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -103,6 +118,23 @@ export default function AdminPedidos() {
                       <StatusBadge status={pedido.status} />
                     </td>
                     <td data-label="Total">{formatPrice(pedido.total)}</td>
+                    <td className="admin-table__cell--actions">
+                      <div className="admin-table__actions">
+                        <Link to={`/admin/pedidos/${pedido.id}`} className="admin-icon-btn" aria-label="Editar status">
+                          <IconEdit />
+                        </Link>
+                        <button
+                          type="button"
+                          className="admin-icon-btn admin-icon-btn--danger"
+                          onClick={() => handleCancelar(pedido)}
+                          disabled={pedido.status === 'CANCELADO' || cancelandoId === pedido.id}
+                          aria-label="Cancelar pedido"
+                          title={pedido.status === 'CANCELADO' ? 'Pedido já cancelado' : 'Cancelar pedido'}
+                        >
+                          <IconTrash />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

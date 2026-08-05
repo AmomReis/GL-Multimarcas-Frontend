@@ -4,6 +4,8 @@ import { api } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
 import { IconClipboard } from '../../components/admin/AdminIcons'
 
+const STATUS_OPCOES = ['CRIADO', 'AGUARDANDO_PAGAMENTO', 'PAGO', 'CANCELADO']
+
 function formatPrice(v) {
   return (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
@@ -18,14 +20,34 @@ export default function AdminPedidoDetail() {
   const [pedido, setPedido] = useState(null)
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
+  const [novoStatus, setNovoStatus] = useState('')
+  const [salvandoStatus, setSalvandoStatus] = useState(false)
+  const [erroStatus, setErroStatus] = useState(null)
 
   useEffect(() => {
     api
       .getPedido(id)
-      .then(setPedido)
+      .then((dados) => {
+        setPedido(dados)
+        setNovoStatus(dados.status)
+      })
       .catch((e) => setErro(e.message))
       .finally(() => setCarregando(false))
   }, [id])
+
+  async function handleSalvarStatus() {
+    if (novoStatus === pedido.status) return
+    setErroStatus(null)
+    setSalvandoStatus(true)
+    try {
+      const atualizado = await api.atualizarStatusPedido(id, novoStatus)
+      setPedido(atualizado)
+    } catch (e) {
+      setErroStatus(e.message)
+    } finally {
+      setSalvandoStatus(false)
+    }
+  }
 
   if (carregando) {
     return (
@@ -57,6 +79,30 @@ export default function AdminPedidoDetail() {
             <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: '0.3rem 0 0' }}>Criado em {formatData(pedido.criadoEm)}</p>
           </div>
           <StatusBadge status={pedido.status} />
+        </div>
+
+        <div className="admin-toolbar" style={{ marginBottom: '1.4rem' }}>
+          <select
+            className="admin-select"
+            value={novoStatus}
+            onChange={(e) => setNovoStatus(e.target.value)}
+            aria-label="Alterar status do pedido"
+          >
+            {STATUS_OPCOES.map((s) => (
+              <option key={s} value={s}>
+                {s.replace('_', ' ')}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="btn btn--gold btn--sm-inline"
+            disabled={salvandoStatus || novoStatus === pedido.status}
+            onClick={handleSalvarStatus}
+          >
+            {salvandoStatus ? 'Salvando...' : 'Salvar status'}
+          </button>
+          {erroStatus && <p className="auth-form__erro" style={{ width: '100%', margin: 0 }}>{erroStatus}</p>}
         </div>
 
         <div className="conta-info" style={{ marginBottom: '1.4rem' }}>

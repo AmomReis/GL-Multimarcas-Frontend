@@ -75,6 +75,8 @@ export const api = {
   checkout: (dados) => jsonRequest('/api/pedidos/checkout', { method: 'POST', body: JSON.stringify(dados) }),
   getPedidos: () => apiFetch('/api/pedidos'),
   getPedido: (id) => apiFetch(`/api/pedidos/${id}`),
+  atualizarStatusPedido: (id, status) =>
+    jsonRequest(`/api/pedidos/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
 
   // Auth — ainda precisa existir no backend, ver observação abaixo
   login: (email, senha) =>
