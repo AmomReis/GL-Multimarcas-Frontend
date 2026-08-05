@@ -71,13 +71,29 @@ o link de pagamento (init_point da preference) dentro de `pagamento`:
 }
 ```
 
-⚠️ **Isso é um formato de exemplo** — eu não tinha acesso ao backend real ao
-fazer esse refactor. `extrairLinkPagamento()` em `src/lib/api.js` já tenta
-vários nomes de campo comuns (`linkPagamento`, `initPoint`, `init_point`,
-`sandboxInitPoint`...), mas vale confirmar/ajustar assim que o contrato do
-backend estiver fechado. Depois que o pedido é criado, o front chama
+✅ **Contrato confirmado contra o backend real** (`Backend-GL-Multimarcas`,
+`PedidoController` + `GatewayPagamentoService` + `PagamentoResponse`): o
+backend usa o SDK oficial do Mercado Pago pra criar a *preference* de
+Checkout Pro e devolve o link em `pagamento.linkPagamento` (via
+`preference.getInitPoint()`), exatamente a primeira chave que
+`extrairLinkPagamento()` (`src/lib/api.js`) tenta — as demais variações
+(`initPoint`, `init_point`, `sandboxInitPoint`) continuam aí só de
+segurança. Os DTOs de request (`ClienteRequest`, `EnderecoEntregaRequest`,
+`PedidoItemRequest`) também batem campo a campo com o payload que este
+front monta. Depois que o pedido é criado, o front chama
 `window.location.assign(link)` e redireciona o cliente pro Mercado Pago —
 não há mais tela de Pix ou formulário de cartão dentro do site.
+
+O webhook (`MercadoPagoWebhookController`, rota `/webhook/mercadopago`) já
+reconsulta o pagamento na API do Mercado Pago e atualiza o status do
+pedido (`PAGO`, `CANCELADO`, `AGUARDANDO_PAGAMENTO`) — é essa reconsulta via
+`GET /api/pedidos/{id}` que a tela de retorno usa, não o webhook direto.
+
+⚠️ O que não é possível confirmar só pelo código: se as variáveis de
+ambiente `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_NOTIFICATION_URL` e
+`MERCADOPAGO_BACK_URL_{SUCCESS,PENDING,FAILURE}` estão de fato configuradas
+no ambiente de deploy — no código elas só existem como `${...}` (Spring
+`@Value`), sem valor hardcoded.
 
 Quando o Mercado Pago redireciona de volta (`back_urls` da preference), o
 front usa `external_reference` pra reconsultar `GET /api/pedidos/{id}` e
