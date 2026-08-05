@@ -7,7 +7,7 @@ const VAZIO = {
   nome: '',
   categoria: CATEGORIAS[0],
   marca: '',
-  tamanho: '',
+  tamanhos: [],
   preco: '',
   estoque: '',
   peso: '0.300',
@@ -22,6 +22,7 @@ export default function AdminProdutoForm() {
   const navigate = useNavigate()
 
   const [form, setForm] = useState(VAZIO)
+  const [novoTamanho, setNovoTamanho] = useState('')
   const [arquivoImagem, setArquivoImagem] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
   const [carregando, setCarregando] = useState(editando)
@@ -37,7 +38,7 @@ export default function AdminProdutoForm() {
           nome: produto.nome || '',
           categoria: produto.categoria,
           marca: produto.marca || '',
-          tamanho: produto.tamanho || '',
+          tamanhos: produto.tamanhos || [],
           preco: String(produto.preco ?? ''),
           estoque: String(produto.estoque ?? ''),
           peso: String(produto.peso ?? '0.300'),
@@ -57,6 +58,25 @@ export default function AdminProdutoForm() {
     }
   }
 
+  function handleAdicionarTamanho() {
+    const valor = novoTamanho.trim()
+    if (!valor) return
+    const jaExiste = form.tamanhos.some((t) => t.toLowerCase() === valor.toLowerCase())
+    setNovoTamanho('')
+    if (jaExiste) return
+    setForm((prev) => ({ ...prev, tamanhos: [...prev.tamanhos, valor] }))
+  }
+
+  function handleTamanhoKeyDown(e) {
+    if (e.key !== 'Enter') return
+    e.preventDefault()
+    handleAdicionarTamanho()
+  }
+
+  function handleRemoverTamanho(valor) {
+    setForm((prev) => ({ ...prev, tamanhos: prev.tamanhos.filter((t) => t !== valor) }))
+  }
+
   function handleImagemSelecionada(e) {
     const arquivo = e.target.files?.[0]
     if (!arquivo) return
@@ -73,7 +93,7 @@ export default function AdminProdutoForm() {
       nome: form.nome,
       categoria: form.categoria,
       marca: form.marca,
-      tamanho: form.tamanho || null,
+      tamanhos: form.tamanhos,
       preco: Number(form.preco),
       estoque: Number(form.estoque),
       peso: Number(form.peso),
@@ -163,16 +183,45 @@ export default function AdminProdutoForm() {
             </label>
           </div>
 
-          <div className="admin-form__linha">
-            <label>
-              Tamanho
-              <input type="text" value={form.tamanho} onChange={campo('tamanho')} placeholder="Opcional" />
-            </label>
-            <label>
-              Peso (kg)
-              <input type="number" step="0.001" min="0.001" required value={form.peso} onChange={campo('peso')} />
-            </label>
-          </div>
+          <label>
+            Peso (kg)
+            <input type="number" step="0.001" min="0.001" required value={form.peso} onChange={campo('peso')} />
+          </label>
+
+          <label>
+            Tamanhos (deixe vazio se o produto não precisar de tamanho)
+            <div className="admin-tamanho-input">
+              <input
+                type="text"
+                value={novoTamanho}
+                onChange={(e) => setNovoTamanho(e.target.value)}
+                onKeyDown={handleTamanhoKeyDown}
+                placeholder="Ex: P, M, G, 40..."
+              />
+              <button type="button" className="btn btn--gold btn--sm-inline" onClick={handleAdicionarTamanho}>
+                Adicionar
+              </button>
+            </div>
+          </label>
+
+          {form.tamanhos.length > 0 && (
+            <div className="admin-tamanho-tags">
+              {form.tamanhos.map((tamanho) => (
+                <span className="admin-tamanho-tag" key={tamanho}>
+                  {tamanho}
+                  <button
+                    type="button"
+                    className="admin-tamanho-tag__remover"
+                    onClick={() => handleRemoverTamanho(tamanho)}
+                    aria-label={`Remover tamanho ${tamanho}`}
+                    title={`Remover tamanho ${tamanho}`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
 
           <label>
             Descrição

@@ -19,25 +19,32 @@ export function CartProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(itens))
   }, [itens])
 
+  // Duas linhas do mesmo produto só são "o mesmo item" se o tamanho também
+  // bater — assim dá pra ter 1x camisa P e 1x camisa M na sacola ao mesmo
+  // tempo. Produto sem tamanho tem tamanho undefined/null dos dois lados.
+  function mesmoItem(a, b) {
+    return a.id === b.id && (a.tamanho || null) === (b.tamanho || null)
+  }
+
   function addItem(produto, quantidade = 1) {
     setItens((prev) => {
-      const existente = prev.find((i) => i.id === produto.id)
+      const existente = prev.find((i) => mesmoItem(i, produto))
       if (existente) {
         return prev.map((i) =>
-          i.id === produto.id ? { ...i, quantidade: i.quantidade + quantidade } : i,
+          mesmoItem(i, produto) ? { ...i, quantidade: i.quantidade + quantidade } : i,
         )
       }
       return [...prev, { ...produto, quantidade }]
     })
   }
 
-  function updateQty(id, quantidade) {
+  function updateQty(id, tamanho, quantidade) {
     if (quantidade < 1) return
-    setItens((prev) => prev.map((i) => (i.id === id ? { ...i, quantidade } : i)))
+    setItens((prev) => prev.map((i) => (mesmoItem(i, { id, tamanho }) ? { ...i, quantidade } : i)))
   }
 
-  function removeItem(id) {
-    setItens((prev) => prev.filter((i) => i.id !== id))
+  function removeItem(id, tamanho) {
+    setItens((prev) => prev.filter((i) => !mesmoItem(i, { id, tamanho })))
   }
 
   function clear() {

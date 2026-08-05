@@ -25,8 +25,9 @@ function notaMockDoProduto(id) {
 
 export default function ProductCard({ produto }) {
   const { addItem } = useCart()
-  const { id, nome, marca, preco, categoria, destaque, imagemUrl, estoque } = produto
+  const { id, nome, marca, preco, categoria, destaque, imagemUrl, estoque, tamanhos } = produto
   const semEstoque = estoque === 0
+  const temTamanhos = Array.isArray(tamanhos) && tamanhos.length > 0
   const { nota } = notaMockDoProduto(id)
 
   function handleAdicionar(e) {
@@ -70,16 +71,27 @@ export default function ProductCard({ produto }) {
             <p className="product-card__parcelas">ou 3x sem juros</p>
           </div>
 
-          <button
-            className="product-card__cart-btn"
-            type="button"
-            onClick={handleAdicionar}
-            disabled={semEstoque}
-            aria-label={semEstoque ? 'Sem estoque' : `Adicionar ${nome} à sacola`}
-            title={semEstoque ? 'Sem estoque' : 'Adicionar à sacola'}
-          >
-            <IconBag aria-hidden="true" />
-          </button>
+          {temTamanhos ? (
+            <Link
+              to={`/produto/${id}`}
+              className="product-card__cart-btn"
+              aria-label={`Escolher tamanho de ${nome}`}
+              title="Escolher tamanho"
+            >
+              <IconBag aria-hidden="true" />
+            </Link>
+          ) : (
+            <button
+              className="product-card__cart-btn"
+              type="button"
+              onClick={handleAdicionar}
+              disabled={semEstoque}
+              aria-label={semEstoque ? 'Sem estoque' : `Adicionar ${nome} à sacola`}
+              title={semEstoque ? 'Sem estoque' : 'Adicionar à sacola'}
+            >
+              <IconBag aria-hidden="true" />
+            </button>
+          )}
         </div>
       </div>
     </article>

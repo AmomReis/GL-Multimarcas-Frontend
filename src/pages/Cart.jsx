@@ -25,7 +25,7 @@ export default function Cart() {
 
       <div className="carrinho__lista">
         {itens.map((item) => (
-          <div className="carrinho__item" key={item.id}>
+          <div className="carrinho__item" key={`${item.id}-${item.tamanho || ''}`}>
             <div className="carrinho__item-media">
               {item.imagemUrl ? (
                 <img src={montarUrlImagem(item.imagemUrl)} alt={item.nome} className="carrinho__item-img" />
@@ -37,15 +37,16 @@ export default function Cart() {
             <div className="carrinho__item-info">
               <p className="product-card__brand">{item.marca}</p>
               <p className="carrinho__item-nome">{item.nome}</p>
+              {item.tamanho && <p className="carrinho__item-tamanho">Tamanho: {item.tamanho}</p>}
               <p className="carrinho__item-preco">{formatPrice(item.preco)}</p>
             </div>
 
             <div className="qtd-control">
-              <button type="button" onClick={() => updateQty(item.id, item.quantidade - 1)}>
+              <button type="button" onClick={() => updateQty(item.id, item.tamanho, item.quantidade - 1)}>
                 −
               </button>
               <span>{item.quantidade}</span>
-              <button type="button" onClick={() => updateQty(item.id, item.quantidade + 1)}>
+              <button type="button" onClick={() => updateQty(item.id, item.tamanho, item.quantidade + 1)}>
                 +
               </button>
             </div>
@@ -53,7 +54,7 @@ export default function Cart() {
             <button
               type="button"
               className="carrinho__remover"
-              onClick={() => removeItem(item.id)}
+              onClick={() => removeItem(item.id, item.tamanho)}
               aria-label={`Remover ${item.nome}`}
             >
               Remover

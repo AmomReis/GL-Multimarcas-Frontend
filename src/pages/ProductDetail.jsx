@@ -17,6 +17,8 @@ export default function ProductDetail() {
   const [produto, setProduto] = useState(null)
   const [carregando, setCarregando] = useState(true)
   const [quantidade, setQuantidade] = useState(1)
+  const [tamanhoSelecionado, setTamanhoSelecionado] = useState(null)
+  const [erroTamanho, setErroTamanho] = useState(false)
   const [adicionado, setAdicionado] = useState(false)
   const mediaRef = useRef(null)
 
@@ -24,6 +26,8 @@ export default function ProductDetail() {
     let ativo = true
     setCarregando(true)
     setAdicionado(false)
+    setTamanhoSelecionado(null)
+    setErroTamanho(false)
 
     api
       .getProduto(id)
@@ -53,9 +57,15 @@ export default function ProductDetail() {
   }
 
   const semEstoque = produto.estoque === 0
+  const temTamanhos = Array.isArray(produto.tamanhos) && produto.tamanhos.length > 0
 
   function handleAdicionar() {
     if (semEstoque) return
+    if (temTamanhos && !tamanhoSelecionado) {
+      setErroTamanho(true)
+      return
+    }
+
     addItem(
       {
         id: produto.id,
@@ -64,11 +74,17 @@ export default function ProductDetail() {
         preco: produto.preco,
         categoria: produto.categoria,
         imagemUrl: produto.imagemUrl,
+        tamanho: tamanhoSelecionado,
       },
       quantidade,
     )
     setAdicionado(true)
     flyToCart(mediaRef.current?.querySelector('img, svg'))
+  }
+
+  function handleSelecionarTamanho(tamanho) {
+    setTamanhoSelecionado(tamanho)
+    setErroTamanho(false)
   }
 
   return (
@@ -96,8 +112,26 @@ export default function ProductDetail() {
             <span>{formatPrice(produto.preco)}</span>
           </div>
 
-          {produto.tamanho && (
-            <p className="produto-detalhe__tamanho">Tamanho: {produto.tamanho}</p>
+          {temTamanhos && (
+            <div className="produto-detalhe__tamanhos">
+              <span className="produto-detalhe__tamanhos-label">
+                Tamanho{tamanhoSelecionado ? `: ${tamanhoSelecionado}` : ''}
+              </span>
+              <div className="tamanho-selector">
+                {produto.tamanhos.map((tamanho) => (
+                  <button
+                    key={tamanho}
+                    type="button"
+                    className={`tamanho-chip ${tamanhoSelecionado === tamanho ? 'is-selected' : ''}`}
+                    onClick={() => handleSelecionarTamanho(tamanho)}
+                    aria-pressed={tamanhoSelecionado === tamanho}
+                  >
+                    {tamanho}
+                  </button>
+                ))}
+              </div>
+              {erroTamanho && <p className="produto-detalhe__tamanho-erro">Escolha um tamanho antes de continuar.</p>}
+            </div>
           )}
 
           <p className="produto-detalhe__descricao">

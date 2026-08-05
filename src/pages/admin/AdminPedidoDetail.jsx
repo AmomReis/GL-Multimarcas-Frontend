@@ -121,6 +121,7 @@ export default function AdminPedidoDetail() {
             <thead>
               <tr>
                 <th>Item</th>
+                <th>Tamanho</th>
                 <th>Qtd.</th>
                 <th>Preço unit.</th>
                 <th>Subtotal</th>
@@ -128,8 +129,9 @@ export default function AdminPedidoDetail() {
             </thead>
             <tbody>
               {pedido.itens.map((item) => (
-                <tr key={item.produtoId}>
+                <tr key={`${item.produtoId}-${item.tamanho || ''}`}>
                   <td className="admin-table__cell--header">{item.nomeProduto}</td>
+                  <td data-label="Tamanho">{item.tamanho || '—'}</td>
                   <td data-label="Qtd.">{item.quantidade}</td>
                   <td data-label="Preço unit.">{formatPrice(item.precoUnitario)}</td>
                   <td data-label="Subtotal">{formatPrice(item.subtotal)}</td>

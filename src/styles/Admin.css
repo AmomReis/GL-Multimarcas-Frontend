@@ -560,6 +560,76 @@
   accent-color: var(--gold);
 }
 
+.admin-tamanho-input {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.admin-tamanho-input input {
+  flex: 1;
+}
+
+.admin-tamanho-input .btn {
+  flex-shrink: 0;
+  width: auto;
+}
+
+.admin-tamanho-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 0.8rem;
+  margin-top: 0.3rem;
+}
+
+.admin-tamanho-tags:empty {
+  display: none;
+}
+
+.admin-tamanho-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: rgba(231, 178, 51, 0.12);
+  border: 1px solid var(--gold-deep);
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.admin-tamanho-tag__remover {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e0654f;
+  color: #17140c;
+  border: 2px solid var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+  transition: transform 0.15s ease;
+}
+
+.admin-tamanho-tag__remover:hover {
+  transform: scale(1.15);
+}
+
+@media (pointer: coarse) {
+  .admin-tamanho-tag__remover {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 .admin-form__imagem-preview {
   width: 100%;
   aspect-ratio: 16 / 9;

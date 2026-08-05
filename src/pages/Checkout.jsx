@@ -75,7 +75,7 @@ export default function Checkout() {
         ...endereco,
         cep: apenasDigitos(endereco.cep),
       },
-      itens: itens.map((i) => ({ produtoId: i.id, quantidade: i.quantidade })),
+      itens: itens.map((i) => ({ produtoId: i.id, quantidade: i.quantidade, tamanho: i.tamanho || null })),
     }
 
     try {
