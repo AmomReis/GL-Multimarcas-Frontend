@@ -207,6 +207,10 @@ button {
   transform: translateY(-1px);
 }
 
+.btn:active {
+  transform: scale(0.96);
+}
+
 .btn--gold {
   background: var(--gold);
   color: #17140c;
@@ -382,6 +386,35 @@ button {
   font-weight: 800;
   line-height: 18px;
   text-align: center;
+}
+
+/* Pulso de "chegou na sacola" — disparado via JS (flyToCart.js) em qualquer
+   elemento com data-cart-target quando o clone terminar de voar. */
+[data-cart-target].cart-target--pop {
+  animation: cartTargetPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-cart-target].cart-target--pop::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 999px;
+  border: 2px solid var(--gold);
+  opacity: 0.9;
+  animation: cartTargetRing 0.5s ease-out;
+  pointer-events: none;
+}
+
+@keyframes cartTargetPop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.3); }
+  60% { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+@keyframes cartTargetRing {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(1.7); opacity: 0; }
 }
 
 .header__menu {
@@ -930,6 +963,11 @@ button {
   border: none;
   background: var(--gold);
   color: #17140c;
+  transition: transform 0.15s ease;
+}
+
+.product-card__cart-btn:active {
+  transform: scale(0.88);
 }
 
 .product-card__cart-btn svg {
@@ -1880,6 +1918,7 @@ button {
 
   .btn,
   .product-card,
+  .product-card__cart-btn,
   .bottom-nav__item,
   .brand-nav__pill {
     transition: none;
@@ -1887,5 +1926,14 @@ button {
 
   .toast {
     animation: none;
+  }
+
+  [data-cart-target].cart-target--pop {
+    animation: none;
+  }
+
+  [data-cart-target].cart-target--pop::after {
+    animation: none;
+    content: none;
   }
 }

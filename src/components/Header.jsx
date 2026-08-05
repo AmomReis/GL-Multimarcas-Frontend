@@ -33,7 +33,7 @@ export default function Header() {
         </Link>
 
         <div className="header__actions">
-          <Link to="/carrinho" className="icon-btn" aria-label="Ver sacola">
+          <Link to="/carrinho" className="icon-btn" aria-label="Ver sacola" data-cart-target="secondary">
             <IconBag className="icon-btn__icon" />
             {totalItens > 0 && <span className="icon-btn__badge">{totalItens}</span>}
           </Link>

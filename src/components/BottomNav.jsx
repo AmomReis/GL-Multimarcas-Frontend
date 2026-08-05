@@ -29,7 +29,7 @@ export default function BottomNav() {
           to="/carrinho"
           className={({ isActive }) => `bottom-nav__item ${isActive ? 'is-active' : ''}`}
         >
-          <span className="bottom-nav__icon-wrap">
+          <span className="bottom-nav__icon-wrap" data-cart-target="primary">
             <IconBag className="bottom-nav__icon" />
             {totalItens > 0 && <span className="bottom-nav__badge">{totalItens}</span>}
           </span>

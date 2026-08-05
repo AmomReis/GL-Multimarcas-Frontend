@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, CATEGORIA_LABEL, montarUrlImagem } from '../lib/api'
 import { products as mockProducts } from '../data/products'
 import GarmentIcon from '../components/GarmentIcon'
 import { useCart } from '../context/CartContext'
+import { flyToCart } from '../lib/flyToCart'
 
 function formatPrice(v) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -17,6 +18,7 @@ export default function ProductDetail() {
   const [carregando, setCarregando] = useState(true)
   const [quantidade, setQuantidade] = useState(1)
   const [adicionado, setAdicionado] = useState(false)
+  const mediaRef = useRef(null)
 
   useEffect(() => {
     let ativo = true
@@ -66,6 +68,7 @@ export default function ProductDetail() {
       quantidade,
     )
     setAdicionado(true)
+    flyToCart(mediaRef.current?.querySelector('img, svg'))
   }
 
   return (
@@ -75,7 +78,7 @@ export default function ProductDetail() {
       </button>
 
       <div className="produto-detalhe__grid">
-        <div className="produto-detalhe__media">
+        <div className="produto-detalhe__media" ref={mediaRef}>
           {produto.imagemUrl ? (
             <img src={montarUrlImagem(produto.imagemUrl)} alt={produto.nome} className="produto-detalhe__img" />
           ) : (

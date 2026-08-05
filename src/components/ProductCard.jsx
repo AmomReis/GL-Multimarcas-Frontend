@@ -3,6 +3,7 @@ import GarmentIcon from './GarmentIcon'
 import { IconCrown, IconStar, IconBag } from './icons'
 import { useCart } from '../context/CartContext'
 import { montarUrlImagem } from '../lib/api'
+import { flyToCart } from '../lib/flyToCart'
 
 function formatPrice(v) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -32,6 +33,8 @@ export default function ProductCard({ produto }) {
     e.preventDefault()
     if (semEstoque) return
     addItem({ id, nome, marca, preco, categoria, imagemUrl })
+    const media = e.currentTarget.closest('.product-card')?.querySelector('.product-card__media img, .product-card__media svg')
+    flyToCart(media)
   }
 
   return (
