@@ -16,12 +16,4 @@ export const promos = [
     cta: 'Conferir novidades',
     to: '/loja',
   },
-  {
-    id: 3,
-    selo: 'Clube GL',
-    titulo: 'Cadastre-se e ganhe 10% na primeira compra',
-    texto: 'Acesso antecipado a lançamentos e descontos exclusivos.',
-    cta: 'Criar conta',
-    to: '/cadastro',
-  },
 ]

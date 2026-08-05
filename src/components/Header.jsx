@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { IconCrown, IconBag, IconMenu, IconClose } from './icons'
 import { useCart } from '../context/CartContext'
-import { useAuth } from '../context/AuthContext'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [menuAberto, setMenuAberto] = useState(false)
   const { totalItens } = useCart()
-  const { autenticado } = useAuth()
   const location = useLocation()
 
   useEffect(() => {
@@ -57,11 +55,6 @@ export default function Header() {
           <a href="/#marcas" onClick={() => setMenuAberto(false)}>Marcas</a>
           <a href="/#clube" onClick={() => setMenuAberto(false)}>Clube GL</a>
           <Link to="/carrinho" onClick={() => setMenuAberto(false)}>Sacola</Link>
-          {autenticado ? (
-            <Link to="/conta" onClick={() => setMenuAberto(false)}>Minha conta</Link>
-          ) : (
-            <Link to="/entrar" onClick={() => setMenuAberto(false)}>Entrar / Criar conta</Link>
-          )}
         </nav>
       )}
     </header>

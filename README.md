@@ -146,12 +146,10 @@ npm run preview
   pequenas, dá pra arrastar).
 - Breakpoints em 768px, 560px e 380px (antes só existia um, em 560px).
 
-## Pendências que encontrei (fora do escopo deste refactor)
+## Login
 
-`src/pages/Login.jsx`, `Register.jsx`, `Account.jsx`, `AuthContext.jsx` e
-`ProtectedRoute.jsx` já existem no projeto mas **não estão funcionais**:
-não há rota registrada em `App.jsx`, `AuthProvider` não está no
-`main.jsx`, e `AuthContext.jsx` chama `api.login`, `api.registrar`,
-`getToken` e `setToken`, que não existem em `lib/api.js`. Não mexi nisso
-porque não fazia parte do pedido, mas fica o aviso caso o plano seja
-ativar login futuramente.
+Não existe conta de cliente nem cadastro público — o checkout é sempre
+feito sem login (ver seção "Rotas do site" acima). O único login do site
+é o do painel administrativo, em `/admin/entrar` (`AdminLogin.jsx`),
+fora da navegação do cliente. `AuthContext.jsx`/`AuthProvider` existem só
+pra sustentar essa sessão de admin.

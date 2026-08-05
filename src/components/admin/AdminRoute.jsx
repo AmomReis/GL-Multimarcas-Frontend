@@ -6,7 +6,7 @@ export default function AdminRoute({ children }) {
   const location = useLocation()
 
   if (!autenticado) {
-    return <Navigate to="/entrar" state={{ from: location }} replace />
+    return <Navigate to="/admin/entrar" state={{ from: location }} replace />
   }
 
   if (!user?.admin) {

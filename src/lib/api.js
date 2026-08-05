@@ -79,15 +79,10 @@ export const api = {
   atualizarStatusPedido: (id, status) =>
     jsonRequest(`/api/pedidos/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
 
-  // Auth — ainda precisa existir no backend, ver observação abaixo
+  // Auth — só login, usado exclusivamente pelo painel admin (/admin/entrar).
+  // Não há conta de cliente: o checkout é sempre feito sem login.
   login: (email, senha) =>
     jsonRequest('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, senha }) }),
-  registrar: (nome, email, senha) =>
-    jsonRequest('/api/auth/registrar', { method: 'POST', body: JSON.stringify({ nome, email, senha }) }),
-  esqueciSenha: (email) =>
-    jsonRequest('/api/auth/esqueci-senha', { method: 'POST', body: JSON.stringify({ email }) }),
-  redefinirSenha: (token, novaSenha) =>
-    jsonRequest('/api/auth/redefinir-senha', { method: 'POST', body: JSON.stringify({ token, novaSenha }) }),
 
 
   // Admin — produtos

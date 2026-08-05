@@ -1,15 +1,19 @@
 import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
-export default function Login() {
-  const { login, carregando, erro } = useAuth()
+export default function AdminLogin() {
+  const { login, autenticado, user, carregando, erro } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
 
-  const destino = location.state?.from?.pathname || '/'
+  const destino = location.state?.from?.pathname || '/admin'
+
+  if (autenticado && user?.admin) {
+    return <Navigate to={destino} replace />
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -19,11 +23,8 @@ export default function Login() {
 
   return (
     <section className="auth-page">
-      <h1 className="section-title">Entrar</h1>
-      <p className="auth-page__subtitulo">Acesse sua conta pra acompanhar seus pedidos.</p>
-      {location.state?.senhaRedefinida && (
-        <p className="auth-form__sucesso">Senha redefinida com sucesso. Entre com a nova senha.</p>
-      )}
+      <h1 className="section-title">Painel Admin</h1>
+      <p className="auth-page__subtitulo">Acesso restrito à equipe da GL Multimarcas.</p>
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <label>
@@ -31,6 +32,7 @@ export default function Login() {
           <input
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -41,6 +43,7 @@ export default function Login() {
           <input
             type="password"
             required
+            autoComplete="current-password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
@@ -52,13 +55,6 @@ export default function Login() {
           {carregando ? 'Entrando...' : 'Entrar'}
         </button>
       </form>
-
-      <p className="auth-page__rodape">
-        <Link to="/esqueci-senha">Esqueci minha senha</Link>
-      </p>
-      <p className="auth-page__rodape">
-        Não tem conta? <Link to="/cadastro">Criar conta</Link>
-      </p>
     </section>
   )
 }

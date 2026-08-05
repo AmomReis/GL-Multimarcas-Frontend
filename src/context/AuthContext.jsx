@@ -39,22 +39,6 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function registrar(nome, email, senha) {
-    setCarregando(true)
-    setErro(null)
-    try {
-      const resposta = await api.registrar(nome, email, senha)
-      setToken(resposta.token)
-      setUser(resposta.usuario)
-      return true
-    } catch (e) {
-      setErro(e.message)
-      return false
-    } finally {
-      setCarregando(false)
-    }
-  }
-
   function logout() {
     setToken(null)
     setUser(null)
@@ -66,7 +50,6 @@ export function AuthProvider({ children }) {
     carregando,
     erro,
     login,
-    registrar,
     logout,
   }
 
