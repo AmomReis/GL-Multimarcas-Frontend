@@ -59,7 +59,9 @@ export function flyToCart(mediaEl) {
 
   const control = {
     x: (start.x + end.x) / 2,
-    y: Math.min(start.y, end.y) - Math.max(90, Math.abs(end.x - start.x) * 0.3),
+    // clamp em 12px: em telas pequenas o produto às vezes já está perto do
+    // topo, e sem isso o arco podia "estourar" pra fora da viewport.
+    y: Math.max(12, Math.min(start.y, end.y) - Math.max(90, Math.abs(end.x - start.x) * 0.3)),
   }
 
   const clone = mediaEl.cloneNode(true)
