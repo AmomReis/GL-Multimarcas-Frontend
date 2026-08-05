@@ -9,6 +9,8 @@ import Checkout from './pages/Checkout'
 import PagamentoRetorno from './pages/PagamentoRetorno'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import EsqueciSenha from './pages/EsqueciSenha'
+import RedefinirSenha from './pages/RedefinirSenha'
 import Account from './pages/Account'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminRoute from './components/admin/AdminRoute'
@@ -31,6 +33,8 @@ export default function App() {
         <Route path="/pagamento/:resultado" element={<PagamentoRetorno />} />
         <Route path="/entrar" element={<Login />} />
         <Route path="/cadastro" element={<Register />} />
+        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+        <Route path="/redefinir-senha" element={<RedefinirSenha />} />
         <Route path="/conta" element={<ProtectedRoute><Account /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Route>

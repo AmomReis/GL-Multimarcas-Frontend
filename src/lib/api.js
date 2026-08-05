@@ -84,7 +84,12 @@ export const api = {
     jsonRequest('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, senha }) }),
   registrar: (nome, email, senha) =>
     jsonRequest('/api/auth/registrar', { method: 'POST', body: JSON.stringify({ nome, email, senha }) }),
-  
+  esqueciSenha: (email) =>
+    jsonRequest('/api/auth/esqueci-senha', { method: 'POST', body: JSON.stringify({ email }) }),
+  redefinirSenha: (token, novaSenha) =>
+    jsonRequest('/api/auth/redefinir-senha', { method: 'POST', body: JSON.stringify({ token, novaSenha }) }),
+
+
   // Admin — produtos
   criarProduto: (dadosProduto, arquivoImagem) => {
     const formData = new FormData()

@@ -21,6 +21,9 @@ export default function Login() {
     <section className="auth-page">
       <h1 className="section-title">Entrar</h1>
       <p className="auth-page__subtitulo">Acesse sua conta pra acompanhar seus pedidos.</p>
+      {location.state?.senhaRedefinida && (
+        <p className="auth-form__sucesso">Senha redefinida com sucesso. Entre com a nova senha.</p>
+      )}
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <label>
@@ -50,6 +53,9 @@ export default function Login() {
         </button>
       </form>
 
+      <p className="auth-page__rodape">
+        <Link to="/esqueci-senha">Esqueci minha senha</Link>
+      </p>
       <p className="auth-page__rodape">
         Não tem conta? <Link to="/cadastro">Criar conta</Link>
       </p>
