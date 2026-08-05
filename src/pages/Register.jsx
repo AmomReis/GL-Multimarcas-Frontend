@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import PasswordInput from '../components/PasswordInput'
 
 export default function Register() {
   const { registrar, carregando, erro } = useAuth()
@@ -28,6 +29,7 @@ export default function Register() {
           <input
             type="text"
             required
+            autoComplete="name"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
           />
@@ -38,6 +40,7 @@ export default function Register() {
           <input
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -45,10 +48,10 @@ export default function Register() {
 
         <label>
           Senha
-          <input
-            type="password"
+          <PasswordInput
             required
             minLength={6}
+            autoComplete="new-password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />

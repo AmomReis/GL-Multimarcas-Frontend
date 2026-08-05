@@ -105,6 +105,12 @@ export default function AdminPedidoDetail() {
           {erroStatus && <p className="auth-form__erro" style={{ width: '100%', margin: 0 }}>{erroStatus}</p>}
         </div>
 
+        {(novoStatus === 'PAGO' || novoStatus === 'CANCELADO') && novoStatus !== pedido.status && (
+          <p style={{ color: 'var(--muted)', fontSize: '0.82rem', marginTop: '-1rem', marginBottom: '1.4rem' }}>
+            O cliente será avisado por e-mail/WhatsApp assim que o status for salvo.
+          </p>
+        )}
+
         <div className="conta-info" style={{ marginBottom: '1.4rem' }}>
             <p>
                 <span>Cliente</span>

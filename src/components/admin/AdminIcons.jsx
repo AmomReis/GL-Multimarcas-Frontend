@@ -108,6 +108,26 @@ export function IconCash(props) {
   )
 }
 
+export function IconUsers(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="9" cy="8.5" r="3.3" />
+      <path d="M2.8 20c0-3.4 2.8-6 6.2-6s6.2 2.6 6.2 6" />
+      <path d="M16 4.7a3.3 3.3 0 0 1 0 6.4" />
+      <path d="M17.5 14.3c2.7.5 4.7 2.8 4.7 5.7" />
+    </svg>
+  )
+}
+
+export function IconSend(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M21.5 3 10.5 14" />
+      <path d="M21.5 3 14.7 21.5 10.5 14 3 9.8 21.5 3Z" />
+    </svg>
+  )
+}
+
 export function IconImage(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>

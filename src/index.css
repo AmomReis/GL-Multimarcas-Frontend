@@ -1119,6 +1119,12 @@ button {
   font-weight: 600;
 }
 
+.clube__erro {
+  color: #e0654f;
+  font-size: 0.85rem;
+  margin-top: 0.8rem;
+}
+
 /* ---------- Footer ---------- */
 .footer {
   max-width: var(--container);
@@ -1815,6 +1821,42 @@ button {
   color: #e0654f;
   font-size: 0.85rem;
   margin: 0;
+}
+
+.campo-senha {
+  position: relative;
+  display: flex;
+}
+
+.campo-senha input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.campo-senha__olho {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.campo-senha__olho svg {
+  width: 19px;
+  height: 19px;
+}
+
+.campo-senha__olho:hover {
+  color: var(--gold);
 }
 
 .auth-page__rodape {

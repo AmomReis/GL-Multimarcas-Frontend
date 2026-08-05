@@ -32,7 +32,7 @@ export default function AdminPedidos() {
   }, [])
 
   async function handleCancelar(pedido) {
-    if (!window.confirm(`Cancelar o pedido ${pedido.id.slice(0, 8)}...? Essa ação não pode ser desfeita.`)) return
+    if (!window.confirm(`Cancelar o pedido ${pedido.id.slice(0, 8)}...? O cliente será avisado por e-mail/WhatsApp e essa ação não pode ser desfeita.`)) return
     setCancelandoId(pedido.id)
     try {
       const atualizado = await api.atualizarStatusPedido(pedido.id, 'CANCELADO')

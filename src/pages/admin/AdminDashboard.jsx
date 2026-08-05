@@ -46,7 +46,10 @@ export default function AdminDashboard() {
     }
   }, [])
 
-  const faturamento = pedidos.filter((p) => p.status === 'PAGO').reduce((soma, p) => soma + (p.total || 0), 0)
+  const recebido = pedidos.filter((p) => p.status === 'PAGO').reduce((soma, p) => soma + (p.total || 0), 0)
+  const aReceber = pedidos
+    .filter((p) => p.status === 'AGUARDANDO_PAGAMENTO' || p.status === 'CRIADO')
+    .reduce((soma, p) => soma + (p.total || 0), 0)
   const aguardando = pedidos.filter((p) => p.status === 'AGUARDANDO_PAGAMENTO').length
   const estoqueBaixo = produtos.filter((p) => p.estoque <= 5)
   const recentes = [...pedidos].sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm)).slice(0, 5)
@@ -68,8 +71,8 @@ export default function AdminDashboard() {
         <StatCard
           icon={IconCash}
           label="Faturamento"
-          value={carregando ? 0 : faturamento}
-          hint={!carregando ? formatPrice(faturamento) : undefined}
+          value={carregando ? 0 : recebido}
+          hint={!carregando ? `Recebido ${formatPrice(recebido)} · A receber ${formatPrice(aReceber)}` : undefined}
           delay={120}
         />
         <StatCard

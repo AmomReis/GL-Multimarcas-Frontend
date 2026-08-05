@@ -130,12 +130,29 @@ npm run preview
   pequenas, dá pra arrastar).
 - Breakpoints em 768px, 560px e 380px (antes só existia um, em 560px).
 
-## Pendências que encontrei (fora do escopo deste refactor)
+## Clube GL / Membros GL (painel admin)
 
-`src/pages/Login.jsx`, `Register.jsx`, `Account.jsx`, `AuthContext.jsx` e
-`ProtectedRoute.jsx` já existem no projeto mas **não estão funcionais**:
-não há rota registrada em `App.jsx`, `AuthProvider` não está no
-`main.jsx`, e `AuthContext.jsx` chama `api.login`, `api.registrar`,
-`getToken` e `setToken`, que não existem em `lib/api.js`. Não mexi nisso
-porque não fazia parte do pedido, mas fica o aviso caso o plano seja
-ativar login futuramente.
+O painel admin (`/admin/membros`) tem uma aba pra mandar uma mensagem de
+oferta em massa pra todo mundo que se cadastrou no Clube GL (formulário de
+newsletter na Home, seção `#clube`, componente `Newsletter.jsx`).
+
+**Endpoints ainda não confirmados no backend** — eu não tinha acesso ao
+backend real, então segui o mesmo padrão do resto do `api.js` (formato de
+exemplo, ver `extrairLinkPagamento`/checkout acima): `POST /api/membros`
+(cadastra o e-mail vindo do formulário da Home), `GET /api/membros` (lista
+os membros pro admin, usado só pra mostrar a contagem) e
+`POST /api/membros/oferta` (`{ mensagem }`, dispara o envio em massa).
+Ajuste `src/lib/api.js` assim que o contrato real do backend estiver
+fechado.
+
+## Notificação de pedido (pago/cancelado)
+
+O pedido é que o cliente receba um aviso por e-mail ou WhatsApp quando o
+status do pedido virar `PAGO` ou `CANCELADO`. Isso **precisa acontecer no
+backend** (é ele quem tem a integração com o provedor de e-mail/WhatsApp) —
+não tem como um front React puro disparar WhatsApp/e-mail sozinho. A
+expectativa é que o próprio `PATCH /api/pedidos/{id}/status` (já usado por
+`AdminPedidoDetail.jsx` e `AdminPedidos.jsx`) dispare a notificação quando
+o novo status for `PAGO` ou `CANCELADO`, usando `cliente.email` e
+`cliente.telefone` que já vêm salvos no pedido desde o checkout. O front só
+avisa o admin, na tela, de que isso vai acontecer.

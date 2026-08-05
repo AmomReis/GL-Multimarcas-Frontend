@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import PasswordInput from '../components/PasswordInput'
 
 export default function Login() {
   const { login, carregando, erro } = useAuth()
@@ -28,6 +29,7 @@ export default function Login() {
           <input
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -35,9 +37,9 @@ export default function Login() {
 
         <label>
           Senha
-          <input
-            type="password"
+          <PasswordInput
             required
+            autoComplete="current-password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />

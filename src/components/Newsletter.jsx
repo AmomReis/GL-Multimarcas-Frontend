@@ -1,13 +1,25 @@
 import { useState } from 'react'
+import { api } from '../lib/api'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('')
   const [enviado, setEnviado] = useState(false)
+  const [enviando, setEnviando] = useState(false)
+  const [erro, setErro] = useState(null)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     if (!email) return
-    setEnviado(true)
+    setEnviando(true)
+    setErro(null)
+    try {
+      await api.cadastrarMembroClube(email)
+      setEnviado(true)
+    } catch (err) {
+      setErro(err.message)
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -30,16 +42,18 @@ export default function Newsletter() {
             <input
               type="email"
               required
+              autoComplete="email"
               placeholder="seu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               aria-label="Seu e-mail"
             />
-            <button type="submit" className="btn btn--dark">
-              Quero entrar
+            <button type="submit" className="btn btn--dark" disabled={enviando}>
+              {enviando ? 'Enviando...' : 'Quero entrar'}
             </button>
           </form>
         )}
+        {erro && <p className="clube__erro">Não foi possível cadastrar: {erro}</p>}
       </div>
     </section>
   )

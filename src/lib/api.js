@@ -95,6 +95,15 @@ export const api = {
   atualizarProduto: (id, dadosProduto) =>
     jsonRequest(`/api/produtos/${id}`, { method: 'PUT', body: JSON.stringify(dadosProduto) }),
   excluirProduto: (id) => apiFetch(`/api/produtos/${id}`, { method: 'DELETE' }),
+
+  // Clube GL — endpoints ainda não confirmados no backend (ver README,
+  // seção "Clube GL / Membros"). Formato de exemplo, ajustar se o contrato
+  // real for diferente.
+  cadastrarMembroClube: (email) =>
+    jsonRequest('/api/membros', { method: 'POST', body: JSON.stringify({ email }) }),
+  getMembrosClube: () => apiFetch('/api/membros'),
+  enviarOfertaMembros: (mensagem) =>
+    jsonRequest('/api/membros/oferta', { method: 'POST', body: JSON.stringify({ mensagem }) }),
 }
 
 export const CATEGORIAS = [

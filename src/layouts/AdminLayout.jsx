@@ -2,13 +2,15 @@ import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo.png'
-import { IconGrid, IconBox, IconClipboard, IconLogout, IconMenu } from '../components/admin/AdminIcons'
+import { IconGrid, IconBox, IconClipboard, IconCash, IconUsers, IconLogout, IconMenu } from '../components/admin/AdminIcons'
 import '../styles/Admin.css'
 
 const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: IconGrid, end: true },
   { to: '/admin/produtos', label: 'Produtos', icon: IconBox },
   { to: '/admin/pedidos', label: 'Pedidos', icon: IconClipboard },
+  { to: '/admin/faturamento', label: 'Faturamento', icon: IconCash },
+  { to: '/admin/membros', label: 'Membros GL', icon: IconUsers },
 ]
 
 export default function AdminLayout() {

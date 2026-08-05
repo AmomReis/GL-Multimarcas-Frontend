@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, apenasDigitos, extrairLinkPagamento } from '../lib/api'
+import { formatTelefone, formatCEP, formatCPF } from '../lib/masks'
 import { useCart } from '../context/CartContext'
 
 function formatPrice(v) {
@@ -25,8 +26,14 @@ export default function Checkout() {
   function campo(setter) {
     return (chave) => (e) => setter((prev) => ({ ...prev, [chave]: e.target.value }))
   }
+  function campoComMascara(setter, formatador) {
+    return (chave) => (e) => setter((prev) => ({ ...prev, [chave]: formatador(e.target.value) }))
+  }
   const setClienteCampo = campo(setCliente)
   const setEnderecoCampo = campo(setEndereco)
+  const setTelefoneCampo = campoComMascara(setCliente, formatTelefone)('telefone')
+  const setCpfCampo = campoComMascara(setCliente, formatCPF)('cpf')
+  const setCepCampo = campoComMascara(setEndereco, formatCEP)('cep')
 
   // Autocompleta rua/bairro/cidade/estado a partir do CEP (ViaCEP), pra
   // poupar digitação em teclado de celular. Não bloqueia o envio se falhar
@@ -157,8 +164,9 @@ export default function Checkout() {
               autoComplete="tel"
               required
               value={cliente.telefone}
-              onChange={setClienteCampo('telefone')}
-              placeholder="11999999999"
+              onChange={setTelefoneCampo}
+              placeholder="(11) 99999-9999"
+              maxLength={15}
             />
           </label>
         </div>
@@ -169,8 +177,8 @@ export default function Checkout() {
             autoComplete="off"
             required
             value={cliente.cpf}
-            onChange={setClienteCampo('cpf')}
-            placeholder="somente números"
+            onChange={setCpfCampo}
+            placeholder="000.000.000-00"
             maxLength={14}
           />
         </label>
@@ -184,9 +192,9 @@ export default function Checkout() {
               autoComplete="postal-code"
               required
               value={endereco.cep}
-              onChange={setEnderecoCampo('cep')}
+              onChange={setCepCampo}
               onBlur={buscarCep}
-              placeholder="8 dígitos"
+              placeholder="00000-000"
               maxLength={9}
             />
           </label>
