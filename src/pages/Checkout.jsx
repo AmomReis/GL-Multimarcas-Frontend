@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, apenasDigitos, extrairLinkPagamento } from '../lib/api'
+import { formatarCep, formatarCpf, formatarTelefone } from '../lib/masks'
 import { useCart } from '../context/CartContext'
 
 function formatPrice(v) {
@@ -25,8 +26,14 @@ export default function Checkout() {
   function campo(setter) {
     return (chave) => (e) => setter((prev) => ({ ...prev, [chave]: e.target.value }))
   }
+  function campoFormatado(setter, formatador) {
+    return (chave) => (e) => setter((prev) => ({ ...prev, [chave]: formatador(e.target.value) }))
+  }
   const setClienteCampo = campo(setCliente)
   const setEnderecoCampo = campo(setEndereco)
+  const setTelefoneCampo = campoFormatado(setCliente, formatarTelefone)('telefone')
+  const setCpfCampo = campoFormatado(setCliente, formatarCpf)('cpf')
+  const setCepCampo = campoFormatado(setEndereco, formatarCep)('cep')
 
   // Autocompleta rua/bairro/cidade/estado a partir do CEP (ViaCEP), pra
   // poupar digitação em teclado de celular. Não bloqueia o envio se falhar
@@ -153,24 +160,27 @@ export default function Checkout() {
             Telefone
             <input
               type="tel"
+              name="tel"
               inputMode="tel"
               autoComplete="tel"
               required
               value={cliente.telefone}
-              onChange={setClienteCampo('telefone')}
-              placeholder="11999999999"
+              onChange={setTelefoneCampo}
+              placeholder="(11) 99999-9999"
+              maxLength={15}
             />
           </label>
         </div>
         <label>
           CPF
           <input
+            name="cpf"
+            id="cpf"
             inputMode="numeric"
-            autoComplete="off"
             required
             value={cliente.cpf}
-            onChange={setClienteCampo('cpf')}
-            placeholder="somente números"
+            onChange={setCpfCampo}
+            placeholder="000.000.000-00"
             maxLength={14}
           />
         </label>
@@ -180,13 +190,14 @@ export default function Checkout() {
           <label>
             CEP
             <input
+              name="postal-code"
               inputMode="numeric"
               autoComplete="postal-code"
               required
               value={endereco.cep}
-              onChange={setEnderecoCampo('cep')}
+              onChange={setCepCampo}
               onBlur={buscarCep}
-              placeholder="8 dígitos"
+              placeholder="00000-000"
               maxLength={9}
             />
           </label>
