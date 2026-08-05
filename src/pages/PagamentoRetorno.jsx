@@ -66,7 +66,7 @@ export default function PagamentoRetorno() {
     let ativo = true
 
     api
-      .getPedido(externalReference)
+      .getPedidoStatusPublico(externalReference)
       .then((dados) => ativo && setPedido(dados))
       .catch(() => {})
       .finally(() => ativo && setCarregando(false))
