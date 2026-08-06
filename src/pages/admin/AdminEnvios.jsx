@@ -15,6 +15,11 @@ function formatItens(itens) {
   return itens.map((item) => `${item.quantidade}x ${item.nomeProduto}`).join(', ')
 }
 
+function formatData(iso) {
+  if (!iso) return null
+  return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+}
+
 const STATUS_ENVIO_FILTROS = ['TODOS', 'AGUARDANDO_PREPARACAO', 'PREPARANDO', 'ENVIADO', 'ENTREGUE']
 
 export default function AdminEnvios() {
@@ -25,7 +30,6 @@ export default function AdminEnvios() {
   const [statusFiltro, setStatusFiltro] = useState('TODOS')
   const [atualizandoId, setAtualizandoId] = useState(null)
   const [notificandoId, setNotificandoId] = useState(null)
-  const [notificadoId, setNotificadoId] = useState(null)
 
   useEffect(() => {
     api
@@ -61,11 +65,11 @@ export default function AdminEnvios() {
 
   async function handleNotificar(pedido) {
     setNotificandoId(pedido.id)
-    setNotificadoId(null)
     try {
-      await api.notificarEnvio(pedido.id)
-      setNotificadoId(pedido.id)
-      setTimeout(() => setNotificadoId((atual) => (atual === pedido.id ? null : atual)), 3000)
+      // Devolve o pedido com envio.notificadoEm preenchido — o back só
+      // preenche isso quando o e-mail realmente sai (ver NotificacaoService).
+      const atualizado = await api.notificarEnvio(pedido.id)
+      setPedidos((prev) => prev.map((p) => (p.id === atualizado.id ? atualizado : p)))
     } catch (e) {
       alert(`Não foi possível notificar o cliente: ${e.message}`)
     } finally {
@@ -128,45 +132,55 @@ export default function AdminEnvios() {
                 </tr>
               </thead>
               <tbody>
-                {envios.map((pedido, i) => (
-                  <tr key={pedido.id} style={{ animationDelay: `${i * 35}ms` }}>
-                    <td className="admin-table__cell--header">
-                      <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
-                    </td>
-                    <td data-label="Cliente">{pedido.cliente?.nome}</td>
-                    <td data-label="Itens">{formatItens(pedido.itens)}</td>
-                    <td data-label="Endereço de entrega">{formatEndereco(pedido.enderecoEntrega)}</td>
-                    <td data-label="Status">
-                      <StatusBadge status={pedido.envio.status} />
-                    </td>
-                    <td className="admin-table__cell--actions">
-                      <div className="admin-table__actions">
-                        <select
-                          className="admin-select"
-                          value={pedido.envio.status}
-                          disabled={atualizandoId === pedido.id}
-                          onChange={(e) => handleAtualizarStatus(pedido, e.target.value)}
-                        >
-                          {STATUS_ENVIO_FILTROS.filter((s) => s !== 'TODOS').map((s) => (
-                            <option key={s} value={s}>
-                              {s.replace(/_/g, ' ')}
-                            </option>
-                          ))}
-                        </select>
-                        <button
-                          type="button"
-                          className="admin-icon-btn"
-                          onClick={() => handleNotificar(pedido)}
-                          disabled={notificandoId === pedido.id}
-                          aria-label="Notificar cliente"
-                          title={notificadoId === pedido.id ? 'E-mail enviado!' : 'Notificar cliente por e-mail'}
-                        >
-                          <IconMail />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {envios.map((pedido, i) => {
+                  const aguardandoPreparacao = pedido.envio.status === 'AGUARDANDO_PREPARACAO'
+                  const notificadoEm = formatData(pedido.envio.notificadoEm)
+                  return (
+                    <tr key={pedido.id} style={{ animationDelay: `${i * 35}ms` }}>
+                      <td className="admin-table__cell--header">
+                        <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
+                      </td>
+                      <td data-label="Cliente">{pedido.cliente?.nome}</td>
+                      <td data-label="Itens">{formatItens(pedido.itens)}</td>
+                      <td data-label="Endereço de entrega">{formatEndereco(pedido.enderecoEntrega)}</td>
+                      <td data-label="Status">
+                        <StatusBadge status={pedido.envio.status} />
+                      </td>
+                      <td className="admin-table__cell--actions">
+                        <div className="admin-table__actions">
+                          <select
+                            className="admin-select"
+                            value={pedido.envio.status}
+                            disabled={atualizandoId === pedido.id}
+                            onChange={(e) => handleAtualizarStatus(pedido, e.target.value)}
+                          >
+                            {STATUS_ENVIO_FILTROS.filter((s) => s !== 'TODOS').map((s) => (
+                              <option key={s} value={s}>
+                                {s.replace(/_/g, ' ')}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            className={`admin-notify-btn ${notificadoEm ? 'admin-notify-btn--notificado' : ''}`}
+                            onClick={() => handleNotificar(pedido)}
+                            disabled={notificandoId === pedido.id || aguardandoPreparacao}
+                            title={
+                              aguardandoPreparacao
+                                ? 'Mude o status antes de notificar — ainda não há nada pra avisar o cliente'
+                                : notificadoEm
+                                  ? `Cliente notificado em ${notificadoEm}`
+                                  : 'Notificar cliente por e-mail'
+                            }
+                          >
+                            <IconMail />
+                            {notificandoId === pedido.id ? 'Enviando...' : notificadoEm ? 'Notificado' : 'Notificar'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

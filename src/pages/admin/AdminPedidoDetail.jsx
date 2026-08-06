@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { api } from '../../lib/api'
+import { api, montarUrlImagem } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
 import { IconClipboard } from '../../components/admin/AdminIcons'
+import GarmentIcon from '../../components/GarmentIcon'
 
 const STATUS_OPCOES = ['CRIADO', 'AGUARDANDO_PAGAMENTO', 'PAGO', 'CANCELADO']
 
@@ -130,7 +131,18 @@ export default function AdminPedidoDetail() {
             <tbody>
               {pedido.itens.map((item) => (
                 <tr key={`${item.produtoId}-${item.tamanho || ''}`}>
-                  <td className="admin-table__cell--header">{item.nomeProduto}</td>
+                  <td className="admin-table__cell--header">
+                    <div className="admin-table__produto">
+                      <div className="admin-table__thumb">
+                        {item.imagemUrl ? (
+                          <img src={montarUrlImagem(item.imagemUrl)} alt={item.nomeProduto} />
+                        ) : (
+                          <GarmentIcon type={item.categoria} />
+                        )}
+                      </div>
+                      <span>{item.nomeProduto}</span>
+                    </div>
+                  </td>
                   <td data-label="Tamanho">{item.tamanho || '—'}</td>
                   <td data-label="Qtd.">{item.quantidade}</td>
                   <td data-label="Preço unit.">{formatPrice(item.precoUnitario)}</td>

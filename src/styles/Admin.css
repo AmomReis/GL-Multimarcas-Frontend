@@ -412,6 +412,28 @@
   color: var(--gold-soft);
 }
 
+.admin-thumb-stack {
+  display: flex;
+}
+
+.admin-thumb-stack__item {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--bg-elev);
+  margin-left: -10px;
+}
+
+.admin-thumb-stack__item:first-child {
+  margin-left: 0;
+}
+
+.admin-thumb-stack__mais {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
 .admin-table__actions {
   display: flex;
   gap: 0.4rem;
@@ -452,6 +474,49 @@
 .admin-icon-btn--danger:hover {
   border-color: #e0654f;
   color: #e0654f;
+}
+
+.admin-notify-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--cream);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.admin-notify-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.admin-notify-btn:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.admin-notify-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-notify-btn--notificado {
+  background: var(--success-soft);
+  border-color: transparent;
+  color: var(--success);
+}
+
+.admin-notify-btn--notificado:hover:not(:disabled) {
+  border-color: var(--success);
+  color: var(--success);
 }
 
 .admin-badge {

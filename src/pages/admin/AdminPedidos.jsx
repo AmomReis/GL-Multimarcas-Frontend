@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api } from '../../lib/api'
+import { api, montarUrlImagem } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
 import { IconClipboard, IconEdit, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
 import ConfirmDialog from '../../components/admin/ConfirmDialog'
+import GarmentIcon from '../../components/GarmentIcon'
+
+const MAX_MINIATURAS = 3
 
 function formatPrice(v) {
   return (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -117,7 +120,24 @@ export default function AdminPedidos() {
                       <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
                     </td>
                     <td data-label="Data">{formatData(pedido.criadoEm)}</td>
-                    <td data-label="Itens">{pedido.itens?.length ?? 0}</td>
+                    <td data-label="Itens">
+                      <div className="admin-thumb-stack">
+                        {(pedido.itens || []).slice(0, MAX_MINIATURAS).map((item, idx) => (
+                          <div className="admin-table__thumb admin-thumb-stack__item" key={idx} title={item.nomeProduto}>
+                            {item.imagemUrl ? (
+                              <img src={montarUrlImagem(item.imagemUrl)} alt={item.nomeProduto} />
+                            ) : (
+                              <GarmentIcon type={item.categoria} />
+                            )}
+                          </div>
+                        ))}
+                        {(pedido.itens?.length ?? 0) > MAX_MINIATURAS && (
+                          <div className="admin-table__thumb admin-thumb-stack__item admin-thumb-stack__mais">
+                            +{pedido.itens.length - MAX_MINIATURAS}
+                          </div>
+                        )}
+                      </div>
+                    </td>
                     <td data-label="Status">
                       <StatusBadge status={pedido.status} />
                     </td>
