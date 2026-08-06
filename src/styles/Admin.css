@@ -19,8 +19,16 @@
   border-right: 1px solid var(--card-border);
   display: flex;
   flex-direction: column;
-  position: sticky;
+  /* position: fixed (não sticky): com sticky, a sidebar só fica "presa"
+     enquanto o container flex (.admin-shell) tiver altura suficiente
+     pra sobrar espaço — qualquer scroll real que passe do fim desse
+     container faz ela se soltar e rolar com a página, cortando o topo
+     (a logo) e movendo tudo pra cima. Fixed nunca depende disso: fica
+     sempre presa na viewport, exatamente como o menu-gaveta do celular
+     já faz (ver @media abaixo). .admin-main compensa com margin-left. */
+  position: fixed;
   top: 0;
+  left: 0;
   height: 100vh;
   z-index: 40;
 }
@@ -100,6 +108,9 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  /* Sidebar agora é position:fixed (fora do fluxo), então o flex do
+     .admin-shell não reserva espaço pra ela sozinho — compensa aqui. */
+  margin-left: var(--admin-sidebar-w);
 }
 
 .admin-topbar {
@@ -756,10 +767,13 @@
 }
 
 @media (max-width: 900px) {
+  .admin-main {
+    /* Sidebar é uma gaveta escondida (translateX) aqui, não deve
+       empurrar o conteúdo mesmo ocupando espaço fixo. */
+    margin-left: 0;
+  }
+
   .admin-sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
     max-width: 85vw;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
@@ -856,9 +870,16 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
-  align-items: center;
+  /* align-items: flex-start (não center): centralizar verticalmente um
+     conteúdo que pode ficar mais alto que a tela (comum no celular,
+     com a barra do navegador ocupando espaço) empurra os botões Sim/Não
+     pra fora da área visível, sem dar pra rolar até eles. Alinhado no
+     topo, o título aparece primeiro e o resto sempre fica alcançável
+     rolando pra baixo. */
+  align-items: flex-start;
   justify-content: center;
   padding: 1.2rem;
+  padding-top: max(1.2rem, 10vh);
   z-index: 60;
   overflow-y: auto;
 }
