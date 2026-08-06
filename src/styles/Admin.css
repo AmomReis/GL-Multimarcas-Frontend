@@ -4,6 +4,8 @@
   --success-soft: rgba(95, 174, 127, 0.14);
   --danger-soft: rgba(224, 101, 79, 0.14);
   --pending-soft: rgba(231, 178, 51, 0.14);
+  --info: #5f9dae;
+  --info-soft: rgba(95, 157, 174, 0.14);
 }
 
 .admin-shell {
@@ -495,6 +497,11 @@
 .admin-badge--criado {
   background: rgba(156, 150, 137, 0.14);
   color: var(--muted);
+}
+
+.admin-badge--enviado {
+  background: var(--info-soft);
+  color: var(--info);
 }
 
 @keyframes adminPulse {

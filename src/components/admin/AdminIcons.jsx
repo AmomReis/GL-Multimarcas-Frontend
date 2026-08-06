@@ -30,6 +30,17 @@ export function IconClipboard(props) {
   )
 }
 
+export function IconTruck(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M2.5 6.5h11v10h-11Z" />
+      <path d="M13.5 10h4l3 3v3.5h-7Z" />
+      <circle cx="6.5" cy="18" r="1.8" />
+      <circle cx="16.5" cy="18" r="1.8" />
+    </svg>
+  )
+}
+
 export function IconLogout(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -95,6 +106,15 @@ export function IconAlertTriangle(props) {
       <path d="M12 3.5 21.5 20h-19Z" />
       <path d="M12 9.5v4.5" />
       <path d="M12 17h.01" />
+    </svg>
+  )
+}
+
+export function IconMail(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2.5" y="5" width="19" height="14" rx="2" />
+      <path d="M3.5 6.5 12 13l8.5-6.5" />
     </svg>
   )
 }

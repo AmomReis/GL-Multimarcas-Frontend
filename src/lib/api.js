@@ -79,6 +79,11 @@ export const api = {
   atualizarStatusPedido: (id, status) =>
     jsonRequest(`/api/pedidos/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
 
+  // Envios
+  atualizarStatusEnvio: (id, status) =>
+    jsonRequest(`/api/pedidos/${id}/envio/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+  notificarEnvio: (id) => apiFetch(`/api/pedidos/${id}/envio/notificar`, { method: 'POST' }),
+
   // Auth — só login, usado exclusivamente pelo painel admin (/admin/entrar).
   // Não há conta de cliente: o checkout é sempre feito sem login.
   login: (email, senha) =>
