@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { IconCrown } from './icons'
+import coroa from '../assets/coroa.png'
 
 // Marcas em destaque na navegação rápida da home. Ajuste essa lista conforme
 // as marcas que você realmente cadastrar no catálogo (campo `marca` do produto).
@@ -19,7 +19,7 @@ export default function BrandStrip() {
             to={`/loja?marca=${encodeURIComponent(marca)}`}
             className="brand-nav__pill"
           >
-            <IconCrown className="brand-nav__pill-icon" aria-hidden="true" />
+            <img src={coroa} alt="" className="brand-nav__pill-icon" />
             {marca}
           </Link>
         ))}

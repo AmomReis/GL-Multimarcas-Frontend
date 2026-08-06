@@ -70,8 +70,6 @@ export default function Checkout() {
     setEnviando(true)
     setErro(null)
 
-    // Formato do payload de exemplo — confirme com o contrato real do
-    // endpoint /api/pedidos/checkout no backend e ajuste se necessário.
     const payload = {
       cliente: {
         ...cliente,

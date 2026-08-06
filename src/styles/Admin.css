@@ -632,6 +632,12 @@
   min-height: 90px;
 }
 
+.admin-form__hint {
+  margin: -0.6rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 .admin-form__checkbox {
   flex-direction: row;
   align-items: center;

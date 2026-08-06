@@ -1,4 +1,4 @@
-import { IconCrown } from './icons'
+import coroa from '../assets/coroa.png'
 
 const SELOS_PADRAO = [
   'Troca fácil em 30 dias',
@@ -16,7 +16,7 @@ export default function TopBar({ itens = SELOS_PADRAO }) {
       <div className="topbar__track">
         {volta.map((texto, i) => (
           <span className="topbar__item" key={`${texto}-${i}`}>
-            <IconCrown className="topbar__icon" aria-hidden="true" />
+            <img src={coroa} alt="" className="topbar__icon" />
             {texto}
           </span>
         ))}

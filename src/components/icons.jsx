@@ -27,15 +27,6 @@ export function IconTag(props) {
   )
 }
 
-export function IconCrown(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M3 8.5 6.5 11 12 4l5.5 7 3.5-2.5-1.4 9.5H4.4L3 8.5Z" />
-      <path d="M4.5 20.5h15" />
-    </svg>
-  )
-}
-
 export function IconBag(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>

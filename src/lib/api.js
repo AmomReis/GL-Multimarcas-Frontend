@@ -98,8 +98,12 @@ export const api = {
     // Sem Content-Type manual: o navegador define o boundary do multipart sozinho.
     return apiFetch('/api/produtos', { method: 'POST', body: formData })
   },
-  atualizarProduto: (id, dadosProduto) =>
-    jsonRequest(`/api/produtos/${id}`, { method: 'PUT', body: JSON.stringify(dadosProduto) }),
+  atualizarProduto: (id, dadosProduto, arquivoImagem) => {
+    const formData = new FormData()
+    formData.append('dados', new Blob([JSON.stringify(dadosProduto)], { type: 'application/json' }))
+    if (arquivoImagem) formData.append('imagem', arquivoImagem)
+    return apiFetch(`/api/produtos/${id}`, { method: 'PUT', body: formData })
+  },
   excluirProduto: (id) => apiFetch(`/api/produtos/${id}`, { method: 'DELETE' }),
 }
 

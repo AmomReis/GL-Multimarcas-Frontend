@@ -290,8 +290,7 @@ button {
 
 .topbar__icon {
   width: 13px;
-  height: 13px;
-  color: var(--gold);
+  height: auto;
   flex-shrink: 0;
 }
 
@@ -329,8 +328,7 @@ button {
 
 .brand-mark__icon {
   width: 22px;
-  height: 22px;
-  color: var(--gold);
+  height: auto;
   flex-shrink: 0;
 }
 
@@ -498,8 +496,7 @@ button {
 
 .hero__badge-icon {
   width: 13px;
-  height: 13px;
-  color: var(--gold);
+  height: auto;
 }
 
 .hero__title {
@@ -677,8 +674,7 @@ button {
 
 .brand-nav__pill-icon {
   width: 15px;
-  height: 15px;
-  color: var(--gold);
+  height: auto;
   flex-shrink: 0;
 }
 
@@ -891,10 +887,9 @@ button {
   max-width: calc(100% - 1.2rem);
 }
 
-.product-card__marca-badge svg {
+.product-card__marca-badge img {
   width: 11px;
-  height: 11px;
-  color: var(--gold);
+  height: auto;
   flex-shrink: 0;
 }
 
@@ -931,24 +926,6 @@ button {
 
 .product-card__name:hover {
   color: var(--gold-soft);
-}
-
-.product-card__rating {
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-}
-
-.product-card__star {
-  width: 12px;
-  height: 12px;
-  color: var(--gold);
-}
-
-.product-card__rating-num {
-  margin-left: 0.3rem;
-  font-size: 0.78rem;
-  color: var(--muted);
 }
 
 .product-card__price-row {
@@ -1821,17 +1798,6 @@ button {
   color: #e0654f;
   font-size: 0.85rem;
   margin: 0;
-}
-
-.auth-page__rodape {
-  margin-top: 1.6rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.auth-page__rodape a {
-  color: var(--gold);
-  text-decoration: underline;
 }
 
 .conta-info {

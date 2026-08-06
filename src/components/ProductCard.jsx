@@ -1,26 +1,13 @@
 import { Link } from 'react-router-dom'
 import GarmentIcon from './GarmentIcon'
-import { IconCrown, IconStar, IconBag } from './icons'
+import { IconBag } from './icons'
 import { useCart } from '../context/CartContext'
 import { montarUrlImagem } from '../lib/api'
 import { flyToCart } from '../lib/flyToCart'
+import coroa from '../assets/coroa.png'
 
 function formatPrice(v) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
-
-// O backend ainda não tem avaliação de clientes por produto — isso aqui é só
-// um placeholder visual (determinístico a partir do id, pra não "piscar"
-// toda vez que a página recarrega). Quando existir avaliação real no banco,
-// troque essa função por produto.notaMedia / produto.totalAvaliacoes.
-function notaMockDoProduto(id) {
-  let hash = 0
-  for (let i = 0; i < String(id).length; i++) {
-    hash = (hash * 31 + String(id).charCodeAt(i)) % 1000
-  }
-  const nota = (4.6 + (hash % 40) / 100).toFixed(1) // entre 4.6 e 4.9
-  const avaliacoes = 40 + (hash % 260) // entre 40 e ~300
-  return { nota, avaliacoes }
 }
 
 export default function ProductCard({ produto }) {
@@ -28,13 +15,12 @@ export default function ProductCard({ produto }) {
   const { id, nome, marca, preco, categoria, destaque, imagemUrl, estoque, tamanhos } = produto
   const semEstoque = estoque === 0
   const temTamanhos = Array.isArray(tamanhos) && tamanhos.length > 0
-  const { nota } = notaMockDoProduto(id)
 
   function handleAdicionar(e) {
     e.preventDefault()
     if (semEstoque) return
     addItem({ id, nome, marca, preco, categoria, imagemUrl })
-    const media = e.currentTarget.closest('.product-card')?.querySelector('.product-card__media img, .product-card__media svg')
+    const media = e.currentTarget.closest('.product-card')?.querySelector('.product-card__media > img, .product-card__media > svg')
     flyToCart(media)
   }
 
@@ -42,7 +28,7 @@ export default function ProductCard({ produto }) {
     <article className="product-card">
       <Link to={`/produto/${id}`} className="product-card__media">
         <span className="product-card__marca-badge">
-          <IconCrown aria-hidden="true" />
+          <img src={coroa} alt="" />
           {marca}
         </span>
         {destaque && <span className="product-card__badge">Destaque</span>}
@@ -57,13 +43,6 @@ export default function ProductCard({ produto }) {
         <Link to={`/produto/${id}`} className="product-card__name">
           {nome}
         </Link>
-
-        <div className="product-card__rating" aria-label={`Avaliação ${nota} de 5`}>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <IconStar key={i} className="product-card__star" aria-hidden="true" />
-          ))}
-          <span className="product-card__rating-num">({nota})</span>
-        </div>
 
         <div className="product-card__price-row">
           <div>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { IconCrown, IconStar } from './icons'
+import { IconStar } from './icons'
+import coroa from '../assets/coroa.png'
 
 // Placeholder — troque pela foto real do catálogo/campanha da GL assim que tiver uma.
 const IMAGEM_HERO = 'https://images.hostinger.com/9fd9a776-bd91-470d-95fa-a3a743569961.png'
@@ -10,7 +11,7 @@ export default function Hero() {
       <div className="hero__glow" aria-hidden="true" />
       <div className="hero__content">
         <span className="hero__badge">
-          <IconCrown className="hero__badge-icon" aria-hidden="true" />
+          <img src={coroa} alt="" className="hero__badge-icon" />
           Coleção 2025
         </span>
 

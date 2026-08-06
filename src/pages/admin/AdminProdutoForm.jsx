@@ -104,7 +104,7 @@ export default function AdminProdutoForm() {
 
     try {
       if (editando) {
-        await api.atualizarProduto(id, payload)
+        await api.atualizarProduto(id, payload, arquivoImagem)
       } else {
         await api.criarProduto(payload, arquivoImagem)
       }
@@ -138,16 +138,12 @@ export default function AdminProdutoForm() {
             {imagemAtual ? <img src={imagemAtual} alt="Pré-visualização" /> : <IconImage />}
           </div>
 
-          {!editando ? (
-            <label>
-              Imagem do produto
-              <input type="file" accept="image/*" onChange={handleImagemSelecionada} />
-            </label>
-          ) : (
-            <label>
-              URL da imagem
-              <input type="text" value={form.imagemUrl} onChange={campo('imagemUrl')} placeholder="/uploads/arquivo.jpg" />
-            </label>
+          <label>
+            {editando ? 'Trocar imagem do produto' : 'Imagem do produto'}
+            <input type="file" accept="image/*" onChange={handleImagemSelecionada} />
+          </label>
+          {editando && !arquivoImagem && (
+            <p className="admin-form__hint">Deixe em branco para manter a imagem atual.</p>
           )}
 
           <label>

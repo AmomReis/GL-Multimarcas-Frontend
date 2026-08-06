@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { IconCrown, IconBag, IconMenu, IconClose } from './icons'
+import { IconBag, IconMenu, IconClose } from './icons'
 import { useCart } from '../context/CartContext'
+import coroa from '../assets/coroa.png'
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -24,7 +25,7 @@ export default function Header() {
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="site-header__inner">
         <Link to="/" className="brand-mark">
-          <IconCrown className="brand-mark__icon" aria-hidden="true" />
+          <img src={coroa} alt="" className="brand-mark__icon" />
           <span className="brand-mark__text">
             GL <span className="text-gold text-gold-sweep">MULTIMARCAS</span>
           </span>
