@@ -34,9 +34,9 @@ body {
   color: var(--cream);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  padding-bottom: calc(96px + env(safe-area-inset-bottom));
   overflow-x: hidden;
 }
+
 
 button,
 a,
@@ -1123,7 +1123,13 @@ button {
 .footer {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 4rem 1.5rem 2rem;
+  /* +96px/safe-area: reserva espaço pro BottomNav fixo por cima do
+     footer (a vitrine é a única rota que renderiza <BottomNav/>). Isso
+     antes vivia como padding-bottom no <body> inteiro, o que vazava
+     pro painel admin: lá não existe bottom nav, então essa sobra
+     virava scroll morto — o suficiente pra descolar a sidebar sticky
+     do fundo da tela e dar a impressão de "menu cortado". */
+  padding: 4rem 1.5rem calc(2rem + 96px + env(safe-area-inset-bottom));
 }
 
 .footer__top {
