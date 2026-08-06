@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 // Modal de confirmação genérico — usado no lugar do window.confirm nativo
 // pra manter a identidade visual do painel admin.
@@ -22,7 +23,7 @@ export default function ConfirmDialog({
 
   if (!aberto) return null
 
-  return (
+  return createPortal(
     <div className="confirm-dialog__overlay" onClick={onCancelar}>
       <div
         className="confirm-dialog"
@@ -42,6 +43,7 @@ export default function ConfirmDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

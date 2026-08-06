@@ -185,7 +185,13 @@
 
 @keyframes adminFadeUp {
   from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  /* transform explicitamente "none" (não translateY(0)): com
+     animation-fill-mode "both", o navegador mantém pra sempre o valor
+     do último keyframe, e qualquer transform != none vira containing
+     block pra descendentes position:fixed — quebrava o ConfirmDialog
+     (renderizado dentro de .admin-page), que passava a ficar preso à
+     altura do conteúdo em vez da tela inteira. */
+  to { opacity: 1; transform: none; }
 }
 
 .admin-page {
