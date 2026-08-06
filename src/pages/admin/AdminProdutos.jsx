@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api, montarUrlImagem, CATEGORIA_LABEL } from '../../lib/api'
 import GarmentIcon from '../../components/GarmentIcon'
 import { IconPlus, IconEdit, IconTrash, IconSearch, IconBox } from '../../components/admin/AdminIcons'
+import ConfirmDialog from '../../components/admin/ConfirmDialog'
 
 function formatPrice(v) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -14,6 +15,7 @@ export default function AdminProdutos() {
   const [erro, setErro] = useState(null)
   const [busca, setBusca] = useState('')
   const [excluindoId, setExcluindoId] = useState(null)
+  const [produtoParaExcluir, setProdutoParaExcluir] = useState(null)
 
   useEffect(() => {
     api
@@ -29,12 +31,14 @@ export default function AdminProdutos() {
     return produtos.filter((p) => p.nome.toLowerCase().includes(termo) || p.marca.toLowerCase().includes(termo))
   }, [busca, produtos])
 
-  async function handleExcluir(produto) {
-    if (!window.confirm(`Excluir "${produto.nome}"? Essa ação não pode ser desfeita.`)) return
+  async function confirmarExclusao() {
+    const produto = produtoParaExcluir
+    if (!produto) return
     setExcluindoId(produto.id)
     try {
       await api.excluirProduto(produto.id)
       setProdutos((prev) => prev.filter((p) => p.id !== produto.id))
+      setProdutoParaExcluir(null)
     } catch (e) {
       alert(`Não foi possível excluir: ${e.message}`)
     } finally {
@@ -120,7 +124,7 @@ export default function AdminProdutos() {
                         <button
                           type="button"
                           className="admin-icon-btn admin-icon-btn--danger"
-                          onClick={() => handleExcluir(produto)}
+                          onClick={() => setProdutoParaExcluir(produto)}
                           disabled={excluindoId === produto.id}
                           aria-label="Excluir"
                         >
@@ -135,6 +139,15 @@ export default function AdminProdutos() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        aberto={Boolean(produtoParaExcluir)}
+        titulo="Tem certeza de excluir esse produto?"
+        mensagem={produtoParaExcluir ? `"${produtoParaExcluir.nome}" será removido permanentemente. Essa ação não pode ser desfeita.` : ''}
+        confirmando={excluindoId === produtoParaExcluir?.id}
+        onConfirmar={confirmarExclusao}
+        onCancelar={() => setProdutoParaExcluir(null)}
+      />
     </div>
   )
 }

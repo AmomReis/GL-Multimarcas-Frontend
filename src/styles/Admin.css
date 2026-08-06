@@ -850,3 +850,64 @@
     width: 100%;
   }
 }
+
+.confirm-dialog__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+  z-index: 60;
+}
+
+.confirm-dialog {
+  width: 100%;
+  max-width: 380px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.confirm-dialog h3 {
+  margin: 0 0 0.6rem;
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+}
+
+.confirm-dialog p {
+  margin: 0 0 1.4rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.confirm-dialog__acoes {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: flex-end;
+}
+
+.confirm-dialog__btn-confirmar {
+  background: #e0654f;
+  color: var(--cream);
+}
+
+.confirm-dialog__btn-confirmar:hover {
+  background: #c9543f;
+}
+
+@media (max-width: 380px) {
+  .confirm-dialog__acoes {
+    flex-direction: column-reverse;
+  }
+
+  .confirm-dialog__acoes .btn {
+    width: 100%;
+  }
+}
