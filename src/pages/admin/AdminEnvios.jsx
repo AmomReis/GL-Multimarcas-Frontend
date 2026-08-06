@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
-import { IconTruck, IconMail, IconSearch } from '../../components/admin/AdminIcons'
+import { IconTruck, IconMail, IconSearch, IconEye } from '../../components/admin/AdminIcons'
 
 function formatEndereco(endereco) {
   if (!endereco) return '—'
@@ -46,7 +46,7 @@ export default function AdminEnvios() {
     return pedidos
       .filter((p) => p.status === 'PAGO' && p.envio)
       .filter((p) => statusFiltro === 'TODOS' || p.envio.status === statusFiltro)
-      .filter((p) => !termo || p.id.toLowerCase().includes(termo))
+      .filter((p) => !termo || (p.cliente?.nome || '').toLowerCase().includes(termo))
       .sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))
   }, [pedidos, busca, statusFiltro])
 
@@ -87,7 +87,7 @@ export default function AdminEnvios() {
         <div className="admin-toolbar">
           <div className="admin-search">
             <IconSearch />
-            <input type="text" placeholder="Buscar por ID do pedido..." value={busca} onChange={(e) => setBusca(e.target.value)} />
+            <input type="text" placeholder="Buscar por nome do cliente..." value={busca} onChange={(e) => setBusca(e.target.value)} />
           </div>
           <select
             className="admin-select"
@@ -123,7 +123,6 @@ export default function AdminEnvios() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Pedido</th>
                   <th>Cliente</th>
                   <th>Itens</th>
                   <th>Endereço de entrega</th>
@@ -137,10 +136,7 @@ export default function AdminEnvios() {
                   const notificadoEm = formatData(pedido.envio.notificadoEm)
                   return (
                     <tr key={pedido.id} style={{ animationDelay: `${i * 35}ms` }}>
-                      <td className="admin-table__cell--header">
-                        <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
-                      </td>
-                      <td data-label="Cliente">{pedido.cliente?.nome}</td>
+                      <td className="admin-table__cell--header">{pedido.cliente?.nome}</td>
                       <td data-label="Itens">{formatItens(pedido.itens)}</td>
                       <td data-label="Endereço de entrega">{formatEndereco(pedido.enderecoEntrega)}</td>
                       <td data-label="Status">
@@ -148,6 +144,9 @@ export default function AdminEnvios() {
                       </td>
                       <td className="admin-table__cell--actions">
                         <div className="admin-table__actions">
+                          <Link to={`/admin/pedidos/${pedido.id}`} className="admin-icon-btn" aria-label="Ver detalhes do pedido">
+                            <IconEye />
+                          </Link>
                           <select
                             className="admin-select"
                             value={pedido.envio.status}

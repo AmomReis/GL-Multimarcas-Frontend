@@ -965,8 +965,6 @@
 .confirm-dialog {
   width: 100%;
   max-width: 380px;
-  max-height: 100%;
-  overflow-y: auto;
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);

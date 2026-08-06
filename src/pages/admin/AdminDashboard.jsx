@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
 import { useCountUp } from '../../hooks/useCountUp'
-import { IconBox, IconClipboard, IconCash, IconAlertTriangle } from '../../components/admin/AdminIcons'
+import { IconBox, IconClipboard, IconCash, IconAlertTriangle, IconEye } from '../../components/admin/AdminIcons'
 import StatusBadge from '../../components/admin/StatusBadge'
 
 function formatPrice(v) {
@@ -105,23 +105,27 @@ export default function AdminDashboard() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Pedido</th>
+                  <th>Cliente</th>
                   <th>Itens</th>
                   <th>Status</th>
                   <th>Total</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {recentes.map((pedido, i) => (
                   <tr key={pedido.id} style={{ animationDelay: `${i * 40}ms` }}>
-                    <td>
-                      <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
-                    </td>
+                    <td className="admin-table__cell--header">{pedido.cliente?.nome || 'Cliente'}</td>
                     <td>{pedido.itens?.length ?? 0}</td>
                     <td>
                       <StatusBadge status={pedido.status} />
                     </td>
                     <td>{formatPrice(pedido.total)}</td>
+                    <td className="admin-table__cell--actions">
+                      <Link to={`/admin/pedidos/${pedido.id}`} className="admin-icon-btn" aria-label="Ver detalhes do pedido">
+                        <IconEye />
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

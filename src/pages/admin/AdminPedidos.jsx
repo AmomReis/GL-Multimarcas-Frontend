@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, montarUrlImagem } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
-import { IconClipboard, IconEdit, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
+import { IconClipboard, IconEye, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
 import ConfirmDialog from '../../components/admin/ConfirmDialog'
 import GarmentIcon from '../../components/GarmentIcon'
 
@@ -55,7 +55,7 @@ export default function AdminPedidos() {
     const termo = busca.trim().toLowerCase()
     return pedidos
       .filter((p) => statusFiltro === 'TODOS' || p.status === statusFiltro)
-      .filter((p) => !termo || p.id.toLowerCase().includes(termo))
+      .filter((p) => !termo || (p.cliente?.nome || '').toLowerCase().includes(termo))
       .sort((a, b) => new Date(b.criadoEm) - new Date(a.criadoEm))
   }, [pedidos, busca, statusFiltro])
 
@@ -69,7 +69,7 @@ export default function AdminPedidos() {
         <div className="admin-toolbar">
           <div className="admin-search">
             <IconSearch />
-            <input type="text" placeholder="Buscar por ID do pedido..." value={busca} onChange={(e) => setBusca(e.target.value)} />
+            <input type="text" placeholder="Buscar por nome do cliente..." value={busca} onChange={(e) => setBusca(e.target.value)} />
           </div>
           <select
             className="admin-select"
@@ -105,7 +105,7 @@ export default function AdminPedidos() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Pedido</th>
+                  <th>Cliente</th>
                   <th>Data</th>
                   <th>Itens</th>
                   <th>Status</th>
@@ -116,9 +116,7 @@ export default function AdminPedidos() {
               <tbody>
                 {filtrados.map((pedido, i) => (
                   <tr key={pedido.id} style={{ animationDelay: `${i * 35}ms` }}>
-                    <td className="admin-table__cell--header">
-                      <Link to={`/admin/pedidos/${pedido.id}`}>{pedido.id.slice(0, 8)}...</Link>
-                    </td>
+                    <td className="admin-table__cell--header">{pedido.cliente?.nome || 'Cliente'}</td>
                     <td data-label="Data">{formatData(pedido.criadoEm)}</td>
                     <td data-label="Itens">
                       <div className="admin-thumb-stack">
@@ -144,8 +142,8 @@ export default function AdminPedidos() {
                     <td data-label="Total">{formatPrice(pedido.total)}</td>
                     <td className="admin-table__cell--actions">
                       <div className="admin-table__actions">
-                        <Link to={`/admin/pedidos/${pedido.id}`} className="admin-icon-btn" aria-label="Editar status">
-                          <IconEdit />
+                        <Link to={`/admin/pedidos/${pedido.id}`} className="admin-icon-btn" aria-label="Ver detalhes do pedido">
+                          <IconEye />
                         </Link>
                         <button
                           type="button"
@@ -170,7 +168,7 @@ export default function AdminPedidos() {
       <ConfirmDialog
         aberto={Boolean(pedidoParaCancelar)}
         titulo="Tem certeza de cancelar esse pedido?"
-        mensagem={pedidoParaCancelar ? `O pedido ${pedidoParaCancelar.id.slice(0, 8)}... será cancelado. Essa ação não pode ser desfeita.` : ''}
+        mensagem={pedidoParaCancelar ? `O pedido de ${pedidoParaCancelar.cliente?.nome || 'cliente'} será cancelado. Essa ação não pode ser desfeita.` : ''}
         confirmando={cancelandoId === pedidoParaCancelar?.id}
         textoConfirmando="Cancelando..."
         onConfirmar={confirmarCancelamento}

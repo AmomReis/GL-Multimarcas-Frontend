@@ -76,8 +76,10 @@ export default function AdminPedidoDetail() {
       <div className="admin-section">
         <div className="admin-section__header">
           <div>
-            <h2>Pedido {pedido.id}</h2>
-            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: '0.3rem 0 0' }}>Criado em {formatData(pedido.criadoEm)}</p>
+            <h2>Pedido de {pedido.cliente?.nome || 'cliente'}</h2>
+            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: '0.3rem 0 0' }}>
+              Criado em {formatData(pedido.criadoEm)} · {pedido.id}
+            </p>
           </div>
           <StatusBadge status={pedido.status} />
         </div>
