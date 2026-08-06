@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
 import StatusBadge from '../../components/admin/StatusBadge'
 import { IconClipboard, IconEdit, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
+import ConfirmDialog from '../../components/admin/ConfirmDialog'
 
 function formatPrice(v) {
   return (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -22,6 +23,7 @@ export default function AdminPedidos() {
   const [busca, setBusca] = useState('')
   const [statusFiltro, setStatusFiltro] = useState('TODOS')
   const [cancelandoId, setCancelandoId] = useState(null)
+  const [pedidoParaCancelar, setPedidoParaCancelar] = useState(null)
 
   useEffect(() => {
     api
@@ -31,12 +33,14 @@ export default function AdminPedidos() {
       .finally(() => setCarregando(false))
   }, [])
 
-  async function handleCancelar(pedido) {
-    if (!window.confirm(`Cancelar o pedido ${pedido.id.slice(0, 8)}...? Essa ação não pode ser desfeita.`)) return
+  async function confirmarCancelamento() {
+    const pedido = pedidoParaCancelar
+    if (!pedido) return
     setCancelandoId(pedido.id)
     try {
       const atualizado = await api.atualizarStatusPedido(pedido.id, 'CANCELADO')
       setPedidos((prev) => prev.map((p) => (p.id === atualizado.id ? atualizado : p)))
+      setPedidoParaCancelar(null)
     } catch (e) {
       alert(`Não foi possível cancelar: ${e.message}`)
     } finally {
@@ -126,7 +130,7 @@ export default function AdminPedidos() {
                         <button
                           type="button"
                           className="admin-icon-btn admin-icon-btn--danger"
-                          onClick={() => handleCancelar(pedido)}
+                          onClick={() => setPedidoParaCancelar(pedido)}
                           disabled={pedido.status === 'CANCELADO' || cancelandoId === pedido.id}
                           aria-label="Cancelar pedido"
                           title={pedido.status === 'CANCELADO' ? 'Pedido já cancelado' : 'Cancelar pedido'}
@@ -142,6 +146,16 @@ export default function AdminPedidos() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        aberto={Boolean(pedidoParaCancelar)}
+        titulo="Tem certeza de cancelar esse pedido?"
+        mensagem={pedidoParaCancelar ? `O pedido ${pedidoParaCancelar.id.slice(0, 8)}... será cancelado. Essa ação não pode ser desfeita.` : ''}
+        confirmando={cancelandoId === pedidoParaCancelar?.id}
+        textoConfirmando="Cancelando..."
+        onConfirmar={confirmarCancelamento}
+        onCancelar={() => setPedidoParaCancelar(null)}
+      />
     </div>
   )
 }

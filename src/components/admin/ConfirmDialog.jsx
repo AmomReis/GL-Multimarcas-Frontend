@@ -2,7 +2,15 @@ import { useEffect } from 'react'
 
 // Modal de confirmação genérico — usado no lugar do window.confirm nativo
 // pra manter a identidade visual do painel admin.
-export default function ConfirmDialog({ aberto, titulo, mensagem, onConfirmar, onCancelar, confirmando }) {
+export default function ConfirmDialog({
+  aberto,
+  titulo,
+  mensagem,
+  onConfirmar,
+  onCancelar,
+  confirmando,
+  textoConfirmando = 'Excluindo...',
+}) {
   useEffect(() => {
     if (!aberto) return
     function onKeyDown(e) {
@@ -30,7 +38,7 @@ export default function ConfirmDialog({ aberto, titulo, mensagem, onConfirmar, o
             Não
           </button>
           <button type="button" className="btn confirm-dialog__btn-confirmar" onClick={onConfirmar} disabled={confirmando}>
-            {confirmando ? 'Excluindo...' : 'Sim'}
+            {confirmando ? textoConfirmando : 'Sim'}
           </button>
         </div>
       </div>
