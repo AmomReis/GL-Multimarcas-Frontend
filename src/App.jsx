@@ -17,6 +17,8 @@ import AdminMarcas from './pages/admin/AdminMarcas'
 import AdminPedidos from './pages/admin/AdminPedidos'
 import AdminPedidoDetail from './pages/admin/AdminPedidoDetail'
 import AdminEnvios from './pages/admin/AdminEnvios'
+import AdminPromocoes from './pages/admin/AdminPromocoes'
+import AdminPromocaoForm from './pages/admin/AdminPromocaoForm'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -44,6 +46,9 @@ export default function App() {
           <Route path="pedidos" element={<AdminPedidos />} />
           <Route path="pedidos/:id" element={<AdminPedidoDetail />} />
           <Route path="envios" element={<AdminEnvios />} />
+          <Route path="promocoes" element={<AdminPromocoes />} />
+          <Route path="promocoes/nova" element={<AdminPromocaoForm />} />
+          <Route path="promocoes/:id/editar" element={<AdminPromocaoForm />} />
         </Route>
       </Routes>
     </>

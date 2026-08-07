@@ -1320,36 +1320,16 @@ button {
 }
 
 .promo-banner {
+  display: block;
   flex: 0 0 100%;
+  aspect-ratio: 2 / 1;
   background: linear-gradient(135deg, #201c15, #100f0d 70%);
-  border: 1px solid var(--card-border);
-  padding: 2.4rem 2rem;
-  text-align: center;
 }
 
-.promo-banner__selo {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #17140c;
-  background: var(--gold);
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
-  margin-bottom: 1rem;
-}
-
-.promo-banner h3 {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
-  margin: 0 0 0.6rem;
-}
-
-.promo-banner p {
-  color: var(--muted);
-  margin: 0 0 1.3rem;
+.promo-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .btn--sm-inline {

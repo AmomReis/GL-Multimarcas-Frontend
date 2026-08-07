@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <PromoBanners />
       <BrandStrip />
+      <PromoBanners />
       <ProductGrid titulo="Destaques" apenasDestaque limite={4} />
       <div className="ver-loja-cta">
         <Link to="/loja" className="btn btn--ghost">Ver todos os produtos</Link>

@@ -130,6 +130,26 @@ export const api = {
   getMarcas: () => apiFetch('/api/marcas'),
   criarMarca: (nome) => jsonRequest('/api/marcas', { method: 'POST', body: JSON.stringify({ nome }) }),
   excluirMarca: (id) => apiFetch(`/api/marcas/${id}`, { method: 'DELETE' }),
+
+  // Promoções
+  getPromocoes: () => apiFetch('/api/promocoes'),
+  getPromocoesAdmin: () => apiFetch('/api/promocoes/admin'),
+  getPromocao: (id) => apiFetch(`/api/promocoes/${id}`),
+  criarPromocao: (dadosPromocao, arquivoImagem) => {
+    const formData = new FormData()
+    formData.append('dados', new Blob([JSON.stringify(dadosPromocao)], { type: 'application/json' }))
+    if (arquivoImagem) formData.append('imagem', arquivoImagem)
+    return apiFetch('/api/promocoes', { method: 'POST', body: formData })
+  },
+  atualizarPromocao: (id, dadosPromocao, arquivoImagem) => {
+    const formData = new FormData()
+    formData.append('dados', new Blob([JSON.stringify(dadosPromocao)], { type: 'application/json' }))
+    if (arquivoImagem) formData.append('imagem', arquivoImagem)
+    return apiFetch(`/api/promocoes/${id}`, { method: 'PUT', body: formData })
+  },
+  alternarAtivoPromocao: (id, ativo) =>
+    jsonRequest(`/api/promocoes/${id}/ativo`, { method: 'PATCH', body: JSON.stringify({ ativo }) }),
+  excluirPromocao: (id) => apiFetch(`/api/promocoes/${id}`, { method: 'DELETE' }),
 }
 
 export const CATEGORIAS = [

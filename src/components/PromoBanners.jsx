@@ -1,25 +1,40 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { promos } from '../data/promos'
+import { api, montarUrlImagem } from '../lib/api'
 
 const SWIPE_MINIMO_PX = 40
 
 export default function PromoBanners() {
+  const [promocoes, setPromocoes] = useState([])
   const [indice, setIndice] = useState(0)
   const pausado = useRef(false)
   const touchStartX = useRef(null)
 
   useEffect(() => {
+    let ativo = true
+    api
+      .getPromocoes()
+      .then((dados) => {
+        if (ativo) setPromocoes(dados)
+      })
+      .catch(() => {})
+    return () => {
+      ativo = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (promocoes.length < 2) return
     const timer = setInterval(() => {
       if (!pausado.current) {
-        setIndice((i) => (i + 1) % promos.length)
+        setIndice((i) => (i + 1) % promocoes.length)
       }
     }, 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [promocoes.length])
 
   function ir(delta) {
-    setIndice((i) => (i + delta + promos.length) % promos.length)
+    setIndice((i) => (i + delta + promocoes.length) % promocoes.length)
   }
 
   function handleTouchStart(e) {
@@ -37,6 +52,10 @@ export default function PromoBanners() {
     touchStartX.current = null
   }
 
+  // Sem promoção ativa cadastrada — não mostra o carrossel em vez de
+  // exibir uma seção vazia.
+  if (promocoes.length === 0) return null
+
   return (
     <section
       className="promo-banners"
@@ -51,46 +70,51 @@ export default function PromoBanners() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {promos.map((p) => (
-            <div className="promo-banner" key={p.id}>
-              <span className="promo-banner__selo">{p.selo}</span>
-              <h3>{p.titulo}</h3>
-              <p>{p.texto}</p>
-              <Link to={p.to} className="btn btn--dark btn--sm-inline">
-                {p.cta}
+          {promocoes.map((p) =>
+            p.link ? (
+              <Link to={p.link} className="promo-banner" key={p.id}>
+                <img src={montarUrlImagem(p.imagemUrl)} alt="Promoção" />
               </Link>
-            </div>
-          ))}
+            ) : (
+              <div className="promo-banner" key={p.id}>
+                <img src={montarUrlImagem(p.imagemUrl)} alt="Promoção" />
+              </div>
+            ),
+          )}
         </div>
       </div>
 
-      <button
-        type="button"
-        className="promo-banners__arrow promo-banners__arrow--prev"
-        onClick={() => ir(-1)}
-        aria-label="Promoção anterior"
-      >
-        ‹
-      </button>
-      <button
-        type="button"
-        className="promo-banners__arrow promo-banners__arrow--next"
-        onClick={() => ir(1)}
-        aria-label="Próxima promoção"
-      >
-        ›
-      </button>
-
-      <div className="promo-banners__dots">
-        {promos.map((p, i) => (
+      {promocoes.length > 1 && (
+        <>
           <button
-            key={p.id}
-            className={`promo-banners__dot ${i === indice ? 'is-active' : ''}`}
-            onClick={() => setIndice(i)}
-            aria-label={`Ir para promoção ${i + 1}`}
-          />
-        ))}
-      </div>
+            type="button"
+            className="promo-banners__arrow promo-banners__arrow--prev"
+            onClick={() => ir(-1)}
+            aria-label="Promoção anterior"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            className="promo-banners__arrow promo-banners__arrow--next"
+            onClick={() => ir(1)}
+            aria-label="Próxima promoção"
+          >
+            ›
+          </button>
+
+          <div className="promo-banners__dots">
+            {promocoes.map((p, i) => (
+              <button
+                key={p.id}
+                className={`promo-banners__dot ${i === indice ? 'is-active' : ''}`}
+                onClick={() => setIndice(i)}
+                aria-label={`Ir para promoção ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </section>
   )
 }
