@@ -1303,7 +1303,10 @@ button {
 /* ---------- Promo banners (carrossel) ---------- */
 .promo-banners {
   position: relative;
-  max-width: var(--container);
+  /* As imagens de promoção são flyers verticais (4:5, tipo post de
+     Instagram) — em telas largas isso ficaria gigante esticado na
+     largura do container inteiro, então limita e centraliza. */
+  max-width: 440px;
   margin: 3rem auto 0;
   padding: 0 1.5rem;
 }
@@ -1322,7 +1325,7 @@ button {
 .promo-banner {
   display: block;
   flex: 0 0 100%;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 4 / 5;
   background: linear-gradient(135deg, #201c15, #100f0d 70%);
 }
 
