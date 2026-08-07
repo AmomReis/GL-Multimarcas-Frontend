@@ -1,6 +1,9 @@
 // src/lib/api.js
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 const TOKEN_KEY = 'gl_token'
+// Precisa bater com USER_KEY em AuthContext.jsx — duplicado aqui porque
+// este arquivo não tem acesso ao contexto React (ver limparSessaoExpirada).
+const USER_KEY = 'gl_user'
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY)
@@ -11,6 +14,20 @@ export function setToken(token) {
   else localStorage.removeItem(TOKEN_KEY)
 }
 
+// Token expirado/invalido: o JwtAuthFilter do backend trata isso como uma
+// requisicao anonima, entao endpoints admin respondem 401/403 mesmo com
+// token presente. O AuthContext nao confere validade do token sozinho (só
+// se ele existe), então sem isso o painel continua de pé com a "casca" de
+// logado enquanto todo request de dado falha silenciosamente. Aqui a
+// sessão é limpa e a pessoa volta pra tela de login com um aviso.
+function limparSessaoExpirada() {
+  setToken(null)
+  localStorage.removeItem(USER_KEY)
+  if (!window.location.pathname.startsWith('/admin/entrar')) {
+    window.location.href = '/admin/entrar?expirada=1'
+  }
+}
+
 async function apiFetch(path, options = {}) {
   const token = getToken()
   const headers = { ...options.headers }
@@ -19,6 +36,9 @@ async function apiFetch(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, { ...options, headers })
 
   if (!response.ok) {
+    if (token && (response.status === 401 || response.status === 403)) {
+      limparSessaoExpirada()
+    }
     const problema = await response.json().catch(() => null)
     throw new Error(problema?.detail || `Erro HTTP ${response.status}`)
   }

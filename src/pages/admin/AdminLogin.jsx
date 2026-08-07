@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 export default function AdminLogin() {
   const { login, autenticado, user, carregando, erro } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [searchParams] = useSearchParams()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
 
   const destino = location.state?.from?.pathname || '/admin'
+  const sessaoExpirada = searchParams.get('expirada') === '1'
 
   if (autenticado && user?.admin) {
     return <Navigate to={destino} replace />
@@ -25,6 +27,10 @@ export default function AdminLogin() {
     <section className="auth-page">
       <h1 className="section-title">Painel Admin</h1>
       <p className="auth-page__subtitulo">Acesso restrito à equipe da GL Multimarcas.</p>
+
+      {sessaoExpirada && (
+        <p className="auth-form__erro">Sua sessão expirou. Faça login novamente.</p>
+      )}
 
       <form className="auth-form" onSubmit={handleSubmit}>
         <label>
