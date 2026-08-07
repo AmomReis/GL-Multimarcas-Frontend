@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo.png'
-import { IconGrid, IconBox, IconClipboard, IconTruck, IconLogout, IconMenu } from '../components/admin/AdminIcons'
+import { IconGrid, IconBox, IconClipboard, IconTruck, IconTag, IconLogout, IconMenu } from '../components/admin/AdminIcons'
 import '../styles/Admin.css'
 
 const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: IconGrid, end: true },
   { to: '/admin/produtos', label: 'Produtos', icon: IconBox },
+  { to: '/admin/marcas', label: 'Marcas', icon: IconTag },
   { to: '/admin/pedidos', label: 'Pedidos', icon: IconClipboard },
   { to: '/admin/envios', label: 'Envios', icon: IconTruck },
 ]
@@ -55,7 +56,7 @@ export default function AdminLayout() {
         </nav>
 
         <div className="admin-sidebar__footer">
-          <button type="button" className="admin-nav-item" onClick={handleSair}>
+          <button type="button" className="admin-btn-sair" onClick={handleSair}>
             <IconLogout />
             <span>Sair</span>
           </button>

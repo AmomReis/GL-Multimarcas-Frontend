@@ -41,8 +41,23 @@ export default function ProductGrid({
   const [marca, setMarca] = useState(marcaInicial)
   const [busca, setBusca] = useState('')
   const [ordenacao, setOrdenacao] = useState('relevancia')
+  const [marcasCadastradas, setMarcasCadastradas] = useState([])
 
   const mostrarControles = Boolean(filtro || mostrarBusca || mostrarOrdenacao) && !limite
+
+  useEffect(() => {
+    if (filtro !== 'marca') return
+    let ativo = true
+    api
+      .getMarcas()
+      .then((dados) => {
+        if (ativo) setMarcasCadastradas(dados.map((m) => m.nome))
+      })
+      .catch(() => {})
+    return () => {
+      ativo = false
+    }
+  }, [filtro])
 
   useEffect(() => {
     let ativo = true
@@ -75,11 +90,16 @@ export default function ProductGrid({
     }
   }, [apenasDestaque])
 
-  // Marcas disponíveis pros chips — calculadas a partir do que realmente veio
-  // da API, então sempre reflete o catálogo real (não uma lista fixa).
+  // Marcas disponíveis pros chips — une o cadastro de marcas (pra já
+  // aparecer assim que uma marca nova é registrada, mesmo sem produto
+  // ainda) com o que realmente veio nos produtos (cobre marca antiga
+  // que não esteja mais no cadastro).
   const marcasDisponiveis = useMemo(
-    () => [...new Set(produtos.map((p) => p.marca))].sort((a, b) => a.localeCompare(b, 'pt-BR')),
-    [produtos],
+    () =>
+      [...new Set([...marcasCadastradas, ...produtos.map((p) => p.marca)])].sort((a, b) =>
+        a.localeCompare(b, 'pt-BR'),
+      ),
+    [produtos, marcasCadastradas],
   )
 
   const visiveis = useMemo(() => {

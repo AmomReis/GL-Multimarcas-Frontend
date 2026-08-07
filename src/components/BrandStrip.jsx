@@ -1,11 +1,28 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { api } from '../lib/api'
 import coroa from '../assets/coroa.png'
 
-// Marcas em destaque na navegação rápida da home. Ajuste essa lista conforme
-// as marcas que você realmente cadastrar no catálogo (campo `marca` do produto).
-const marcasDestaque = ['Nike', 'Adidas', 'Lacoste', 'Diesel', 'Tommy Hilfiger', 'Puma']
+// Marcas de fallback pra navegação rápida da home, usadas só se o backend
+// estiver fora do ar — em uso normal a lista vem do cadastro de marcas.
+const marcasFallback = ['Nike', 'Adidas', 'Lacoste', 'Diesel', 'Tommy Hilfiger', 'Puma']
 
 export default function BrandStrip() {
+  const [marcas, setMarcas] = useState(marcasFallback)
+
+  useEffect(() => {
+    let ativo = true
+    api
+      .getMarcas()
+      .then((dados) => {
+        if (ativo && dados.length > 0) setMarcas(dados.map((m) => m.nome))
+      })
+      .catch(() => {})
+    return () => {
+      ativo = false
+    }
+  }, [])
+
   return (
     <section id="marcas" className="brand-nav">
       <h2 className="section-title">
@@ -13,7 +30,7 @@ export default function BrandStrip() {
       </h2>
 
       <div className="brand-nav__grid">
-        {marcasDestaque.map((marca) => (
+        {marcas.map((marca) => (
           <Link
             key={marca}
             to={`/loja?marca=${encodeURIComponent(marca)}`}

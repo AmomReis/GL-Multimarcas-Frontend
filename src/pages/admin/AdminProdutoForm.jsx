@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, montarUrlImagem, CATEGORIAS, CATEGORIA_LABEL } from '../../lib/api'
 import { IconImage } from '../../components/admin/AdminIcons'
 
@@ -28,6 +28,14 @@ export default function AdminProdutoForm() {
   const [carregando, setCarregando] = useState(editando)
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState(null)
+  const [marcas, setMarcas] = useState([])
+
+  useEffect(() => {
+    api
+      .getMarcas()
+      .then((dados) => setMarcas(dados.map((m) => m.nome)))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     if (!editando) return
@@ -164,7 +172,23 @@ export default function AdminProdutoForm() {
             </label>
             <label>
               Marca
-              <input type="text" required value={form.marca} onChange={campo('marca')} />
+              <select value={form.marca} required onChange={campo('marca')}>
+                <option value="" disabled>
+                  Selecione uma marca
+                </option>
+                {/* Se o produto já tiver uma marca fora do cadastro (dado antigo), mantém ela visível na lista. */}
+                {form.marca && !marcas.includes(form.marca) && (
+                  <option value={form.marca}>{form.marca}</option>
+                )}
+                {marcas.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+              <Link to="/admin/marcas" className="admin-form__hint" style={{ display: 'inline-block', marginTop: '0.35rem' }}>
+                Cadastrar nova marca
+              </Link>
             </label>
           </div>
 

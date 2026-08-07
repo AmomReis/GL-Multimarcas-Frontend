@@ -64,39 +64,115 @@
   gap: 0.3rem;
 }
 
+.admin-btn-sair {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 0.9rem 0.75rem 1.1rem;
+  border-radius: 10px;
+  background: none;
+  border: 1px solid rgba(195, 39, 39, 0.463);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.admin-btn-sair svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.admin-btn-sair:hover {
+  color: var(--cream);
+  background: rgba(213, 17, 17, 0.658);
+}
+
+.admin-btn-sair:hover svg {
+  color: var(--cream);
+}
+
 .admin-nav-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.85rem;
   min-height: 48px;
-  padding: 0.75rem 0.9rem;
+  padding: 0.75rem 0.9rem 0.75rem 1.1rem;
   border-radius: 10px;
   color: var(--muted);
   font-size: 0.9rem;
   font-weight: 600;
   white-space: nowrap;
-  transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Barra de destaque à esquerda — cresce a partir do centro no hover/ativo
+   em vez de simplesmente aparecer, pra dar uma sensação mais "viva". */
+.admin-nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: 999px;
+  background: var(--gold);
+  transform: translateY(-50%);
+  transition: height 0.2s ease;
 }
 
 .admin-nav-item svg {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+  color: var(--gold-deep);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
 }
 
 .admin-nav-item:hover {
   color: var(--cream);
-  background: rgba(244, 239, 228, 0.05);
-  transform: translateX(2px);
+  background: rgba(244, 239, 228, 0.06);
+  transform: translateX(3px);
+}
+
+.admin-nav-item:hover::before {
+  height: 16px;
+}
+
+.admin-nav-item:hover svg {
+  color: var(--gold);
+  transform: scale(1.08);
 }
 
 .admin-nav-item.is-active {
   color: #17140c;
-  background: var(--gold);
-  box-shadow: 0 6px 18px rgba(231, 178, 51, 0.25);
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  box-shadow: 0 6px 18px rgba(231, 178, 51, 0.3);
+}
+
+.admin-nav-item.is-active svg {
+  color: #17140c;
+}
+
+.admin-nav-item.is-active::before {
+  height: 60%;
+  background: #17140c;
+  opacity: 0.18;
 }
 
 .admin-nav-item.is-active:hover {
+  transform: none;
+}
+
+.admin-nav-item.is-active:hover svg {
   transform: none;
 }
 

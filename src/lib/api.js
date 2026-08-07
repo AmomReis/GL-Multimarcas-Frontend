@@ -105,6 +105,11 @@ export const api = {
     return apiFetch(`/api/produtos/${id}`, { method: 'PUT', body: formData })
   },
   excluirProduto: (id) => apiFetch(`/api/produtos/${id}`, { method: 'DELETE' }),
+
+  // Marcas
+  getMarcas: () => apiFetch('/api/marcas'),
+  criarMarca: (nome) => jsonRequest('/api/marcas', { method: 'POST', body: JSON.stringify({ nome }) }),
+  excluirMarca: (id) => apiFetch(`/api/marcas/${id}`, { method: 'DELETE' }),
 }
 
 export const CATEGORIAS = [

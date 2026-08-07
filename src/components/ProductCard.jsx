@@ -29,7 +29,7 @@ export default function ProductCard({ produto }) {
       <Link to={`/produto/${id}`} className="product-card__media">
         <span className="product-card__marca-badge">
           <img src={coroa} alt="" />
-          {marca}
+          <span>{marca}</span>
         </span>
         {destaque && <span className="product-card__badge">Destaque</span>}
         {imagemUrl ? (

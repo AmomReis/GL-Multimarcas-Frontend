@@ -12,6 +12,7 @@ import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminProdutos from './pages/admin/AdminProdutos'
 import AdminProdutoForm from './pages/admin/AdminProdutoForm'
+import AdminMarcas from './pages/admin/AdminMarcas'
 import AdminPedidos from './pages/admin/AdminPedidos'
 import AdminPedidoDetail from './pages/admin/AdminPedidoDetail'
 import AdminEnvios from './pages/admin/AdminEnvios'
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="produtos" element={<AdminProdutos />} />
         <Route path="produtos/novo" element={<AdminProdutoForm />} />
         <Route path="produtos/:id/editar" element={<AdminProdutoForm />} />
+        <Route path="marcas" element={<AdminMarcas />} />
         <Route path="pedidos" element={<AdminPedidos />} />
         <Route path="pedidos/:id" element={<AdminPedidoDetail />} />
         <Route path="envios" element={<AdminEnvios />} />
