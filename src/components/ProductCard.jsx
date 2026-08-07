@@ -27,11 +27,13 @@ export default function ProductCard({ produto }) {
   return (
     <article className="product-card">
       <Link to={`/produto/${id}`} className="product-card__media">
-        <span className="product-card__marca-badge">
-          <img src={coroa} alt="" />
-          <span>{marca}</span>
-        </span>
-        {destaque && <span className="product-card__badge">Destaque</span>}
+        <div className="product-card__badges">
+          <span className="product-card__marca-badge">
+            <img src={coroa} alt="" />
+            <span>{marca}</span>
+          </span>
+          {destaque && <span className="product-card__badge">Destaque</span>}
+        </div>
         {imagemUrl ? (
           <img src={montarUrlImagem(imagemUrl)} alt={nome} className="product-card__img" />
         ) : (

@@ -829,11 +829,6 @@ button {
   }
 }
 
-.chip:hover {
-  border-color: var(--gold);
-  color: var(--cream);
-}
-
 .chip--active {
   background: linear-gradient(135deg, var(--gold-soft), var(--gold));
   border-color: var(--gold);
@@ -842,10 +837,21 @@ button {
   box-shadow: 0 6px 18px rgba(231, 178, 51, 0.3);
 }
 
-.chip--active:hover {
-  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-  border-color: var(--gold);
-  color: #17140c;
+/* :hover só entra em telas com mouse de verdade. Em touch não existe
+   "sair" do elemento — o toque deixa o :hover "grudado" até o usuário
+   tocar em outro lugar, e é isso que fazia o chip tocado ficar preso
+   com a cor de hover por cima da de ativo (ou vice-versa). */
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    border-color: var(--gold);
+    color: var(--cream);
+  }
+
+  .chip--active:hover {
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    border-color: var(--gold);
+    color: #17140c;
+  }
 }
 
 .vitrine__status {
@@ -902,14 +908,28 @@ button {
   object-fit: cover;
 }
 
-.product-card__marca-badge {
+/* Os dois badges vivem num único container flex (em vez de cada um
+   position:absolute num canto por conta própria) — assim a marca sempre
+   sabe exatamente quanto espaço sobra ao lado do "Destaque" (ou usa a
+   largura toda quando ele não existe) e trunca sozinha, sem precisar de
+   um max-width fixo "no chute" que quebra pra nomes muito longos. */
+.product-card__badges {
   position: absolute;
   top: 0.6rem;
   left: 0.6rem;
+  right: 0.6rem;
   z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.product-card__marca-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.64rem;
   letter-spacing: 0.05em;
@@ -920,9 +940,6 @@ button {
   border: 1px solid var(--gold-deep);
   padding: 0.28rem 0.55rem;
   border-radius: 999px;
-  /* Deixa espaço reservado pro badge "Destaque" do outro canto, senão
-     uma marca com nome longo cresce por cima dele. */
-  max-width: calc(100% - 5.4rem);
 }
 
 .product-card__marca-badge img {
@@ -939,9 +956,7 @@ button {
 }
 
 .product-card__badge {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  flex-shrink: 0;
   font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.05em;
@@ -951,6 +966,7 @@ button {
   font-weight: 700;
   padding: 0.25rem 0.5rem;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .product-card__info {

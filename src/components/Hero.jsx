@@ -12,7 +12,7 @@ export default function Hero() {
       <div className="hero__content">
         <span className="hero__badge">
           <img src={coroa} alt="" className="hero__badge-icon" />
-          Coleção 2025
+          Coleção 2026
         </span>
 
         <h1 className="hero__title">
