@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { IconBag, IconMenu, IconClose } from './icons'
+import { IconBag, IconMenu, IconClose, IconShield } from './icons'
 import { useCart } from '../context/CartContext'
 import coroa from '../assets/coroa.png'
 
@@ -35,6 +35,10 @@ export default function Header() {
           <Link to="/carrinho" className="icon-btn" aria-label="Ver sacola" data-cart-target="secondary">
             <IconBag className="icon-btn__icon" />
             {totalItens > 0 && <span className="icon-btn__badge">{totalItens}</span>}
+          </Link>
+
+          <Link to="/admin" className="icon-btn" aria-label="Painel admin">
+            <IconShield className="icon-btn__icon" />
           </Link>
 
           <button
