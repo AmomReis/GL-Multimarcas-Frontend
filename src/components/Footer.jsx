@@ -29,7 +29,7 @@ export default function Footer() {
           </div>
           <div>
             <p className="footer__heading text-gold-sweep">Desenvolvedor <br/> Amom Reis</p>
-            <a href="https://www.instagram.com/amomreis/" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.instagram.com/amom_reis/" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="https://wa.me/559185236610" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           </div>
         </div>

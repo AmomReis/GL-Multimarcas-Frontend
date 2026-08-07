@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import ScrollToTop from './components/ScrollToTop'
 import RootLayout from './layouts/RootLayout'
 import AdminLayout from './layouts/AdminLayout'
 import Home from './pages/Home'
@@ -20,28 +21,31 @@ import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<RootLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/loja" element={<Loja />} />
-        <Route path="/produto/:id" element={<ProductDetail />} />
-        <Route path="/carrinho" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/pagamento/:resultado" element={<PagamentoRetorno />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route element={<RootLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/loja" element={<Loja />} />
+          <Route path="/produto/:id" element={<ProductDetail />} />
+          <Route path="/carrinho" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/pagamento/:resultado" element={<PagamentoRetorno />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
 
-      <Route path="/admin/entrar" element={<AdminLogin />} />
-      <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="produtos" element={<AdminProdutos />} />
-        <Route path="produtos/novo" element={<AdminProdutoForm />} />
-        <Route path="produtos/:id/editar" element={<AdminProdutoForm />} />
-        <Route path="marcas" element={<AdminMarcas />} />
-        <Route path="pedidos" element={<AdminPedidos />} />
-        <Route path="pedidos/:id" element={<AdminPedidoDetail />} />
-        <Route path="envios" element={<AdminEnvios />} />
-      </Route>
-    </Routes>
+        <Route path="/admin/entrar" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="produtos" element={<AdminProdutos />} />
+          <Route path="produtos/novo" element={<AdminProdutoForm />} />
+          <Route path="produtos/:id/editar" element={<AdminProdutoForm />} />
+          <Route path="marcas" element={<AdminMarcas />} />
+          <Route path="pedidos" element={<AdminPedidos />} />
+          <Route path="pedidos/:id" element={<AdminPedidoDetail />} />
+          <Route path="envios" element={<AdminEnvios />} />
+        </Route>
+      </Routes>
+    </>
   )
 }
