@@ -12,7 +12,7 @@ const ENDERECO_VAZIO = { cep: '', rua: '', numero: '', complemento: '', bairro: 
 const CLIENTE_VAZIO = { nome: '', email: '', telefone: '', cpf: '' }
 
 export default function Checkout() {
-  const { itens, totalPreco, clear } = useCart()
+  const { itens, totalPreco, totalItens, clear } = useCart()
   const [cliente, setCliente] = useState(CLIENTE_VAZIO)
   const [endereco, setEndereco] = useState(ENDERECO_VAZIO)
 
@@ -34,6 +34,9 @@ export default function Checkout() {
   const setTelefoneCampo = campoFormatado(setCliente, formatarTelefone)('telefone')
   const setCpfCampo = campoFormatado(setCliente, formatarCpf)('cpf')
   const setCepCampo = campoFormatado(setEndereco, formatarCep)('cep')
+  // O backend espera a sigla; autoCapitalize é só dica de teclado e não vale
+  // no teclado físico nem em todo Android, então normalizamos no state.
+  const setUfCampo = campoFormatado(setEndereco, (v) => v.toUpperCase().replace(/[^A-Z]/g, ''))('estado')
 
   // Autocompleta rua/bairro/cidade/estado a partir do CEP (ViaCEP), pra
   // poupar digitação em teclado de celular. Não bloqueia o envio se falhar
@@ -220,23 +223,37 @@ export default function Checkout() {
           Complemento
           <input autoComplete="off" value={endereco.complemento} onChange={setEnderecoCampo('complemento')} />
         </label>
-        <div className="checkout__linha">
-          <label>
-            Bairro
-            <input required value={endereco.bairro} onChange={setEnderecoCampo('bairro')} />
-          </label>
+        <label>
+          Bairro
+          <input required value={endereco.bairro} onChange={setEnderecoCampo('bairro')} />
+        </label>
+        {/* Cidade e UF na mesma linha: dar a largura inteira do celular a um
+            campo de 2 caracteres desperdiçava uma rolagem de formulário. */}
+        <div className="checkout__linha checkout__linha--cidade-uf">
           <label>
             Cidade
             <input required autoComplete="address-level2" value={endereco.cidade} onChange={setEnderecoCampo('cidade')} />
           </label>
+          <label>
+            UF
+            <input
+              required
+              maxLength={2}
+              autoComplete="address-level1"
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck="false"
+              value={endereco.estado}
+              onChange={setUfCampo}
+              placeholder="SP"
+            />
+          </label>
         </div>
-        <label>
-          Estado (UF)
-          <input required maxLength={2} autoComplete="address-level1" value={endereco.estado} onChange={setEnderecoCampo('estado')} />
-        </label>
 
         <div className="carrinho__resumo checkout__resumo">
-          <span>Subtotal dos produtos</span>
+          <span>
+            Subtotal · {totalItens} {totalItens === 1 ? 'item' : 'itens'}
+          </span>
           <strong>{formatPrice(totalPreco)}</strong>
         </div>
         <p className="checkout__frete-aviso">+ frete calculado pelo backend na confirmação do pedido</p>

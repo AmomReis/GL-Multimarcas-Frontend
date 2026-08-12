@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, montarUrlImagem } from '../../lib/api'
+import { useToast } from '../../context/ToastContext'
 import StatusBadge from '../../components/admin/StatusBadge'
 import { IconClipboard, IconEye, IconSearch, IconTrash } from '../../components/admin/AdminIcons'
 import ConfirmDialog from '../../components/admin/ConfirmDialog'
@@ -27,6 +28,7 @@ export default function AdminPedidos() {
   const [statusFiltro, setStatusFiltro] = useState('TODOS')
   const [cancelandoId, setCancelandoId] = useState(null)
   const [pedidoParaCancelar, setPedidoParaCancelar] = useState(null)
+  const { showToast } = useToast()
 
   useEffect(() => {
     api
@@ -44,8 +46,9 @@ export default function AdminPedidos() {
       const atualizado = await api.atualizarStatusPedido(pedido.id, 'CANCELADO')
       setPedidos((prev) => prev.map((p) => (p.id === atualizado.id ? atualizado : p)))
       setPedidoParaCancelar(null)
+      showToast('Pedido cancelado', { tipo: 'sucesso' })
     } catch (e) {
-      alert(`Não foi possível cancelar: ${e.message}`)
+      showToast(`Não foi possível cancelar: ${e.message}`, { tipo: 'erro', duracao: 5000 })
     } finally {
       setCancelandoId(null)
     }

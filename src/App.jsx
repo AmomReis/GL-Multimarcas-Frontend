@@ -1,7 +1,7 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import RootLayout from './layouts/RootLayout'
-import AdminLayout from './layouts/AdminLayout'
 import Home from './pages/Home'
 import Loja from './pages/Loja'
 import ProductDetail from './pages/ProductDetail'
@@ -9,21 +9,35 @@ import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import PagamentoRetorno from './pages/PagamentoRetorno'
 import AdminRoute from './components/admin/AdminRoute'
-import AdminLogin from './pages/admin/AdminLogin'
-import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminProdutos from './pages/admin/AdminProdutos'
-import AdminProdutoForm from './pages/admin/AdminProdutoForm'
-import AdminMarcas from './pages/admin/AdminMarcas'
-import AdminPedidos from './pages/admin/AdminPedidos'
-import AdminPedidoDetail from './pages/admin/AdminPedidoDetail'
-import AdminEnvios from './pages/admin/AdminEnvios'
-import AdminPromocoes from './pages/admin/AdminPromocoes'
-import AdminPromocaoForm from './pages/admin/AdminPromocaoForm'
 import NotFound from './pages/NotFound'
+
+// O painel admin é usado só pela loja, mas ia junto no mesmo bundle que
+// todo cliente baixa — inclusive no 4G do celular. Em lazy() ele vira um
+// arquivo à parte, carregado só quando alguém abre /admin.
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'))
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
+const AdminProdutos = lazy(() => import('./pages/admin/AdminProdutos'))
+const AdminProdutoForm = lazy(() => import('./pages/admin/AdminProdutoForm'))
+const AdminMarcas = lazy(() => import('./pages/admin/AdminMarcas'))
+const AdminPedidos = lazy(() => import('./pages/admin/AdminPedidos'))
+const AdminPedidoDetail = lazy(() => import('./pages/admin/AdminPedidoDetail'))
+const AdminEnvios = lazy(() => import('./pages/admin/AdminEnvios'))
+const AdminPromocoes = lazy(() => import('./pages/admin/AdminPromocoes'))
+const AdminPromocaoForm = lazy(() => import('./pages/admin/AdminPromocaoForm'))
+
+function CarregandoPagina() {
+  return (
+    <div className="pagina-status">
+      <div className="spinner" aria-hidden="true" />
+      <p>Carregando...</p>
+    </div>
+  )
+}
 
 export default function App() {
   return (
-    <>
+    <Suspense fallback={<CarregandoPagina />}>
       <ScrollToTop />
       <Routes>
         <Route element={<RootLayout />}>
@@ -51,6 +65,6 @@ export default function App() {
           <Route path="promocoes/:id/editar" element={<AdminPromocaoForm />} />
         </Route>
       </Routes>
-    </>
+    </Suspense>
   )
 }

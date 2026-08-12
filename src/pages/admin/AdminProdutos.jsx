@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, montarUrlImagem, CATEGORIA_LABEL } from '../../lib/api'
+import { useToast } from '../../context/ToastContext'
 import GarmentIcon from '../../components/GarmentIcon'
 import { IconPlus, IconEdit, IconTrash, IconSearch, IconBox } from '../../components/admin/AdminIcons'
 import ConfirmDialog from '../../components/admin/ConfirmDialog'
@@ -16,6 +17,7 @@ export default function AdminProdutos() {
   const [busca, setBusca] = useState('')
   const [excluindoId, setExcluindoId] = useState(null)
   const [produtoParaExcluir, setProdutoParaExcluir] = useState(null)
+  const { showToast } = useToast()
 
   useEffect(() => {
     api
@@ -39,8 +41,9 @@ export default function AdminProdutos() {
       await api.excluirProduto(produto.id)
       setProdutos((prev) => prev.filter((p) => p.id !== produto.id))
       setProdutoParaExcluir(null)
+      showToast(`"${produto.nome}" foi excluído`, { tipo: 'sucesso' })
     } catch (e) {
-      alert(`Não foi possível excluir: ${e.message}`)
+      showToast(`Não foi possível excluir: ${e.message}`, { tipo: 'erro', duracao: 5000 })
     } finally {
       setExcluindoId(null)
     }

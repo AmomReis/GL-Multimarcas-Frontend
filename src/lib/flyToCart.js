@@ -5,10 +5,11 @@
 // que clonamos o nó real em vez de recriar um <img>.
 //
 // O alvo principal (pra onde o clone voa) é marcado com
-// data-cart-target="primary" (ícone da sacola na bottom nav, sempre visível
-// nesse layout). Todo elemento com data-cart-target (primary ou secondary,
-// ex: o ícone do header) recebe o pulso de "chegou" — cobre tanto quem olha
-// pro topo quanto pra barra inferior.
+// data-cart-target="primary" (ícone da sacola na bottom nav). Em rotas sem
+// bottom nav — a página do produto, onde ela dá lugar à barra de compra —
+// o voo cai no primeiro alvo disponível, que é o ícone do header. Todo
+// elemento com data-cart-target (primary ou secondary) recebe o pulso de
+// "chegou", cobrindo tanto quem olha pro topo quanto pra barra inferior.
 
 function ease(t) {
   // easeInOutCubic: acelera e desacelera suavemente, sem pico de velocidade
@@ -41,7 +42,9 @@ function pulseTargets() {
 }
 
 export function flyToCart(mediaEl) {
-  const target = document.querySelector('[data-cart-target="primary"]')
+  const target =
+    document.querySelector('[data-cart-target="primary"]') ||
+    document.querySelector('[data-cart-target]')
 
   if (!mediaEl || !target) {
     pulseTargets()

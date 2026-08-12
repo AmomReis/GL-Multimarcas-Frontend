@@ -28,6 +28,7 @@ export default function BottomNav() {
         <NavLink
           to="/carrinho"
           className={({ isActive }) => `bottom-nav__item ${isActive ? 'is-active' : ''}`}
+          aria-label={`Sacola${totalItens > 0 ? `, ${totalItens} ${totalItens === 1 ? 'item' : 'itens'}` : ' vazia'}`}
         >
           <span className="bottom-nav__icon-wrap" data-cart-target="primary">
             <IconBag className="bottom-nav__icon" />

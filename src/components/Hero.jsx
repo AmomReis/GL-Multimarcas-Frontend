@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
-import { IconStar } from './icons'
+import { IconStar, IconCheck } from './icons'
 import coroa from '../assets/coroa.png'
 
 // Placeholder — troque pela foto real do catálogo/campanha da GL assim que tiver uma.
 const IMAGEM_HERO = 'https://images.hostinger.com/9fd9a776-bd91-470d-95fa-a3a743569961.png'
+
+const SELOS = ['100% originais', 'Entrega para todo o Brasil', 'Troca em 30 dias']
 
 export default function Hero() {
   return (
@@ -37,8 +39,26 @@ export default function Hero() {
           </Link>
         </div>
 
+        <ul className="hero__selos">
+          {SELOS.map((selo) => (
+            <li key={selo}>
+              <IconCheck aria-hidden="true" />
+              {selo}
+            </li>
+          ))}
+        </ul>
+
         <div className="hero__media">
-          <img src={IMAGEM_HERO} alt="Modelo vestindo peça da curadoria GL Multimarcas" />
+          <img
+            src={IMAGEM_HERO}
+            alt="Modelo vestindo peça da curadoria GL Multimarcas"
+            /* Imagem de LCP: sem lazy e com prioridade alta, senão o
+               navegador só começa a baixá-la depois do layout. Atributo em
+               minúsculas de propósito — o React 18 não conhece a forma
+               camelCase (`fetchPriority`) e a descartaria com um aviso. */
+            fetchpriority="high"
+            decoding="async"
+          />
           <div className="hero__stat">
             <span className="hero__stat-nota">
               <IconStar className="hero__stat-star" aria-hidden="true" />

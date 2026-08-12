@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, montarUrlImagem } from '../../lib/api'
+import { useToast } from '../../context/ToastContext'
 import { IconPlus, IconEdit, IconTrash, IconImage } from '../../components/admin/AdminIcons'
 import ConfirmDialog from '../../components/admin/ConfirmDialog'
 
@@ -11,6 +12,7 @@ export default function AdminPromocoes() {
   const [alternandoId, setAlternandoId] = useState(null)
   const [excluindoId, setExcluindoId] = useState(null)
   const [promocaoParaExcluir, setPromocaoParaExcluir] = useState(null)
+  const { showToast } = useToast()
 
   useEffect(() => {
     api
@@ -25,8 +27,9 @@ export default function AdminPromocoes() {
     try {
       const atualizada = await api.alternarAtivoPromocao(promocao.id, !promocao.ativo)
       setPromocoes((prev) => prev.map((p) => (p.id === atualizada.id ? atualizada : p)))
+      showToast(atualizada.ativo ? 'Promoção ativada na home' : 'Promoção desativada', { tipo: 'sucesso' })
     } catch (e) {
-      alert(`Não foi possível atualizar: ${e.message}`)
+      showToast(`Não foi possível atualizar: ${e.message}`, { tipo: 'erro', duracao: 5000 })
     } finally {
       setAlternandoId(null)
     }
@@ -40,8 +43,9 @@ export default function AdminPromocoes() {
       await api.excluirPromocao(promocao.id)
       setPromocoes((prev) => prev.filter((p) => p.id !== promocao.id))
       setPromocaoParaExcluir(null)
+      showToast('Promoção excluída', { tipo: 'sucesso' })
     } catch (e) {
-      alert(`Não foi possível excluir: ${e.message}`)
+      showToast(`Não foi possível excluir: ${e.message}`, { tipo: 'erro', duracao: 5000 })
     } finally {
       setExcluindoId(null)
     }

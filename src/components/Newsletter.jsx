@@ -1,13 +1,16 @@
 import { useState } from 'react'
+import { useToast } from '../context/ToastContext'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('')
   const [enviado, setEnviado] = useState(false)
+  const { showToast } = useToast()
 
   function handleSubmit(e) {
     e.preventDefault()
     if (!email) return
     setEnviado(true)
+    showToast('Pronto! Você está no Clube GL.', { tipo: 'sucesso' })
   }
 
   return (
@@ -34,6 +37,9 @@ export default function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               aria-label="Seu e-mail"
+              inputMode="email"
+              autoComplete="email"
+              enterKeyHint="send"
             />
             <button type="submit" className="btn btn--dark">
               Quero entrar

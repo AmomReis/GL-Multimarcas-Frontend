@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../../lib/api'
+import { useToast } from '../../context/ToastContext'
 import { IconTag } from '../../components/admin/AdminIcons'
 import ConfirmDialog from '../../components/admin/ConfirmDialog'
 
@@ -12,6 +13,7 @@ export default function AdminMarcas() {
   const [erroForm, setErroForm] = useState(null)
   const [excluindoId, setExcluindoId] = useState(null)
   const [marcaParaExcluir, setMarcaParaExcluir] = useState(null)
+  const { showToast } = useToast()
 
   useEffect(() => {
     api
@@ -46,8 +48,9 @@ export default function AdminMarcas() {
       await api.excluirMarca(marca.id)
       setMarcas((prev) => prev.filter((m) => m.id !== marca.id))
       setMarcaParaExcluir(null)
+      showToast(`Marca "${marca.nome}" excluída`, { tipo: 'sucesso' })
     } catch (e) {
-      alert(`Não foi possível excluir: ${e.message}`)
+      showToast(`Não foi possível excluir: ${e.message}`, { tipo: 'erro', duracao: 5000 })
     } finally {
       setExcluindoId(null)
     }

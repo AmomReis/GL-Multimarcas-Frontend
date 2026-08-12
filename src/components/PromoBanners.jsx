@@ -25,6 +25,9 @@ export default function PromoBanners() {
 
   useEffect(() => {
     if (promocoes.length < 2) return
+    // Quem pediu menos movimento no sistema não deve levar um carrossel
+    // trocando de banner sozinho — as setas e os pontos continuam lá.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const timer = setInterval(() => {
       if (!pausado.current) {
         setIndice((i) => (i + 1) % promocoes.length)
@@ -70,17 +73,27 @@ export default function PromoBanners() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {promocoes.map((p) =>
-            p.link ? (
-              <Link to={p.link} className="promo-banner" key={p.id}>
-                <img src={montarUrlImagem(p.imagemUrl)} alt="Promoção" />
+          {promocoes.map((p, i) => {
+            const imagem = (
+              <img
+                src={montarUrlImagem(p.imagemUrl)}
+                alt="Promoção"
+                // Só o primeiro banner aparece de imediato; os outros só
+                // existem depois de um swipe ou do autoplay.
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            )
+            return p.link ? (
+              <Link to={p.link} className="promo-banner" key={p.id} aria-hidden={i !== indice} tabIndex={i === indice ? 0 : -1}>
+                {imagem}
               </Link>
             ) : (
               <div className="promo-banner" key={p.id}>
-                <img src={montarUrlImagem(p.imagemUrl)} alt="Promoção" />
+                {imagem}
               </div>
-            ),
-          )}
+            )
+          })}
         </div>
       </div>
 

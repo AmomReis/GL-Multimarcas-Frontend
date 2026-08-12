@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { api } from '../lib/api'
 import { products as mockProducts } from '../data/products'
 import ProductCard from './ProductCard'
-import { IconSearch, IconChevronDown } from './icons'
+import ProductCardSkeleton from './ProductCardSkeleton'
+import { IconSearch, IconChevronDown, IconClose, IconBagEmpty, IconAlert } from './icons'
 
 const ORDENACOES = [
   { valor: 'relevancia', label: 'Relevância' },
@@ -10,6 +11,14 @@ const ORDENACOES = [
   { valor: 'maior-preco', label: 'Maior preço' },
   { valor: 'nome', label: 'Nome (A-Z)' },
 ]
+
+// Quantos cards da vitrine carregam a imagem sem lazy — cobre a primeira
+// dobra no celular (2 colunas) e no desktop (4 colunas).
+const CARDS_PRIORITARIOS = 4
+
+// Quantos esqueletos mostrar enquanto carrega; o suficiente pra preencher
+// a área visível sem inventar uma página inteira de conteúdo falso.
+const SKELETONS = 6
 
 function ordenar(lista, criterio) {
   const copia = [...lista]
@@ -58,6 +67,13 @@ export default function ProductGrid({
       ativo = false
     }
   }, [filtro])
+
+  // A marca vinda da URL (/loja?marca=Nike) só chega como valor inicial do
+  // state; sem isso, navegar de uma marca pra outra pela home não trocava o
+  // chip ativo, porque o componente não remonta.
+  useEffect(() => {
+    setMarca(marcaInicial)
+  }, [marcaInicial])
 
   useEffect(() => {
     let ativo = true
@@ -121,6 +137,13 @@ export default function ProductGrid({
     return limite ? lista.slice(0, limite) : lista
   }, [produtos, filtro, marca, busca, ordenacao, limite])
 
+  const temFiltroAtivo = Boolean(marca || busca.trim())
+
+  function limparFiltros() {
+    setMarca('')
+    setBusca('')
+  }
+
   return (
     <section id="vitrine" className="vitrine">
       <div className="vitrine__header">
@@ -132,70 +155,120 @@ export default function ProductGrid({
 
       {mostrarControles && (
         <div className="vitrine__controles">
-          {mostrarBusca && (
-            <label className="vitrine__busca">
-              <IconSearch aria-hidden="true" />
-              <input
-                type="search"
-                placeholder="Buscar camisa ou marca..."
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                aria-label="Buscar produto"
-              />
-            </label>
-          )}
+          <div className="vitrine__linha-busca">
+            {mostrarBusca && (
+              <label className="vitrine__busca">
+                <IconSearch aria-hidden="true" />
+                <input
+                  type="search"
+                  placeholder="Buscar peça ou marca..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  aria-label="Buscar produto"
+                  enterKeyHint="search"
+                  autoComplete="off"
+                />
+                {busca && (
+                  <button
+                    type="button"
+                    className="vitrine__busca-limpar"
+                    onClick={() => setBusca('')}
+                    aria-label="Limpar busca"
+                  >
+                    <IconClose aria-hidden="true" />
+                  </button>
+                )}
+              </label>
+            )}
 
-          {mostrarOrdenacao && (
-            <div className="vitrine__ordenacao">
-              <select value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)} aria-label="Ordenar produtos">
-                {ORDENACOES.map((o) => (
-                  <option key={o.valor} value={o.valor}>
-                    {o.label}
-                  </option>
+            {mostrarOrdenacao && (
+              <div className="vitrine__ordenacao">
+                <select value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)} aria-label="Ordenar produtos">
+                  {ORDENACOES.map((o) => (
+                    <option key={o.valor} value={o.valor}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+                <IconChevronDown aria-hidden="true" />
+              </div>
+            )}
+          </div>
+
+          {filtro === 'marca' && marcasDisponiveis.length > 0 && (
+            <div className="vitrine__filtros-wrap">
+              <div className="vitrine__filtros" role="group" aria-label="Filtrar por marca">
+                <button
+                  type="button"
+                  className={`chip ${marca === '' ? 'chip--active' : ''}`}
+                  onClick={() => setMarca('')}
+                  aria-pressed={marca === ''}
+                >
+                  Todas
+                </button>
+                {marcasDisponiveis.map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    className={`chip ${marca === m ? 'chip--active' : ''}`}
+                    onClick={() => setMarca(m)}
+                    aria-pressed={marca === m}
+                  >
+                    {m}
+                  </button>
                 ))}
-              </select>
-              <IconChevronDown aria-hidden="true" />
+              </div>
             </div>
           )}
 
-          {filtro === 'marca' && marcasDisponiveis.length > 0 && (
-            <div className="vitrine__filtros" role="group" aria-label="Filtrar por marca">
-              <button
-                type="button"
-                className={`chip ${marca === '' ? 'chip--active' : ''}`}
-                onClick={() => setMarca('')}
-              >
-                Todas
-              </button>
-              {marcasDisponiveis.map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  className={`chip ${marca === m ? 'chip--active' : ''}`}
-                  onClick={() => setMarca(m)}
-                >
-                  {m}
+          {!carregando && (
+            <div className="vitrine__resultado">
+              <span aria-live="polite">
+                {visiveis.length} {visiveis.length === 1 ? 'produto' : 'produtos'}
+                {marca && ` · ${marca}`}
+              </span>
+              {temFiltroAtivo && (
+                <button type="button" className="vitrine__limpar" onClick={limparFiltros}>
+                  Limpar filtros
                 </button>
-              ))}
+              )}
             </div>
           )}
         </div>
       )}
 
       {usandoMock && (
-        <p className="vitrine__status">
-          Não consegui falar com o backend agora — mostrando produtos de exemplo.
+        <p className="vitrine__aviso">
+          <IconAlert aria-hidden="true" />
+          Não consegui falar com o servidor agora — estes são produtos de exemplo.
         </p>
       )}
 
       {carregando ? (
-        <p className="vitrine__status">Carregando produtos...</p>
+        <div className="vitrine__grid">
+          {Array.from({ length: SKELETONS }, (_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </div>
       ) : visiveis.length === 0 ? (
-        <p className="vitrine__status">Nenhum produto encontrado.</p>
+        <div className="vitrine__vazio">
+          <IconBagEmpty className="vitrine__vazio-icon" aria-hidden="true" />
+          <p className="vitrine__vazio-titulo">Nenhum produto encontrado</p>
+          <p className="vitrine__vazio-texto">
+            {temFiltroAtivo
+              ? 'Tente outra marca ou mude os termos da busca.'
+              : 'Em breve novas peças na vitrine.'}
+          </p>
+          {temFiltroAtivo && (
+            <button type="button" className="btn btn--outline" onClick={limparFiltros}>
+              Limpar filtros
+            </button>
+          )}
+        </div>
       ) : (
         <div className="vitrine__grid">
-          {visiveis.map((p) => (
-            <ProductCard key={p.id} produto={p} />
+          {visiveis.map((p, i) => (
+            <ProductCard key={p.id} produto={p} prioridade={i < CARDS_PRIORITARIOS} />
           ))}
         </div>
       )}

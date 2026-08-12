@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../../lib/api'
+import { useToast } from '../../context/ToastContext'
 import StatusBadge from '../../components/admin/StatusBadge'
 import { IconTruck, IconMail, IconSearch, IconEye } from '../../components/admin/AdminIcons'
 
@@ -30,6 +31,7 @@ export default function AdminEnvios() {
   const [statusFiltro, setStatusFiltro] = useState('TODOS')
   const [atualizandoId, setAtualizandoId] = useState(null)
   const [notificandoId, setNotificandoId] = useState(null)
+  const { showToast } = useToast()
 
   useEffect(() => {
     api
@@ -56,8 +58,9 @@ export default function AdminEnvios() {
     try {
       const atualizado = await api.atualizarStatusEnvio(pedido.id, novoStatus)
       setPedidos((prev) => prev.map((p) => (p.id === atualizado.id ? atualizado : p)))
+      showToast(`Envio marcado como ${novoStatus.replace(/_/g, ' ').toLowerCase()}`, { tipo: 'sucesso' })
     } catch (e) {
-      alert(`Não foi possível atualizar o envio: ${e.message}`)
+      showToast(`Não foi possível atualizar o envio: ${e.message}`, { tipo: 'erro', duracao: 5000 })
     } finally {
       setAtualizandoId(null)
     }
@@ -70,8 +73,9 @@ export default function AdminEnvios() {
       // preenche isso quando o e-mail realmente sai (ver NotificacaoService).
       const atualizado = await api.notificarEnvio(pedido.id)
       setPedidos((prev) => prev.map((p) => (p.id === atualizado.id ? atualizado : p)))
+      showToast(`E-mail enviado para ${pedido.cliente?.nome || 'o cliente'}`, { tipo: 'sucesso' })
     } catch (e) {
-      alert(`Não foi possível notificar o cliente: ${e.message}`)
+      showToast(`Não foi possível notificar o cliente: ${e.message}`, { tipo: 'erro', duracao: 5000 })
     } finally {
       setNotificandoId(null)
     }
@@ -137,8 +141,13 @@ export default function AdminEnvios() {
                   return (
                     <tr key={pedido.id} style={{ animationDelay: `${i * 35}ms` }}>
                       <td className="admin-table__cell--header">{pedido.cliente?.nome}</td>
-                      <td data-label="Itens">{formatItens(pedido.itens)}</td>
-                      <td data-label="Endereço de entrega">{formatEndereco(pedido.enderecoEntrega)}</td>
+                      {/* --longo: no card do celular esses dois viram
+                          rótulo em cima e texto embaixo, em vez de espremer
+                          um endereço inteiro na metade direita da linha. */}
+                      <td className="admin-table__cell--longo" data-label="Itens">{formatItens(pedido.itens)}</td>
+                      <td className="admin-table__cell--longo" data-label="Endereço de entrega">
+                        {formatEndereco(pedido.enderecoEntrega)}
+                      </td>
                       <td data-label="Status">
                         <StatusBadge status={pedido.envio.status} />
                       </td>

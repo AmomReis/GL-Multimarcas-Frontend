@@ -10,7 +10,12 @@
 
 .admin-shell {
   display: flex;
+  /* dvh com fallback: no celular, 100vh conta a barra de endereço do
+     navegador como se ela não existisse, então a tela "real" é menor que
+     100vh — é o que empurrava o rodapé da sidebar (o botão Sair) pra fora
+     da área visível, sem jeito de rolar até ele. */
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg);
 }
 
@@ -32,6 +37,7 @@
   top: 0;
   left: 0;
   height: 100vh;
+  height: 100dvh;
   z-index: 40;
 }
 
@@ -39,8 +45,11 @@
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 1.4rem 1.3rem;
+  /* +safe-area no topo: em iPhone com notch a gaveta vai até a borda da
+     tela e a logo ficava por baixo do recorte. */
+  padding: calc(1.4rem + env(safe-area-inset-top)) 1.3rem 1.4rem;
   border-bottom: 1px solid var(--card-border);
+  flex-shrink: 0;
 }
 
 .admin-sidebar__brand img {
@@ -62,6 +71,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  /* A gaveta tem altura fixa (100dvh): se um dia entrar mais um item de
+     menu, ou a tela for baixa (celular deitado), a lista rola dentro dela
+     em vez de empurrar o botão Sair pra fora. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .admin-btn-sair {
@@ -177,8 +191,9 @@
 }
 
 .admin-sidebar__footer {
-  padding: 1rem 0.8rem 1.3rem;
+  padding: 1rem 0.8rem calc(1.3rem + env(safe-area-inset-bottom));
   border-top: 1px solid var(--card-border);
+  flex-shrink: 0;
 }
 
 .admin-main {
@@ -199,16 +214,26 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.1rem 1.8rem;
+  padding: calc(1.1rem + env(safe-area-inset-top)) 1.8rem 1.1rem;
   background: rgba(11, 11, 12, 0.85);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--card-border);
+}
+
+.admin-topbar__esquerda {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
 }
 
 .admin-topbar__title {
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-topbar__toggle {
@@ -253,7 +278,7 @@
 
 .admin-content {
   flex: 1;
-  padding: 1.8rem;
+  padding: 1.8rem 1.8rem calc(1.8rem + env(safe-area-inset-bottom));
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
@@ -912,6 +937,20 @@
     content: none;
   }
 
+  /* Texto corrido longo (endereço, lista de itens) não cabe na metade
+     direita de um card de celular: o rótulo sobe pra sua própria linha e o
+     conteúdo usa a largura toda, alinhado à esquerda. */
+  .admin-table td.admin-table__cell--longo {
+    display: block;
+    text-align: left;
+    line-height: 1.45;
+  }
+
+  .admin-table td.admin-table__cell--longo::before {
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
   .admin-table td.admin-table__cell--actions {
     justify-content: flex-end;
     padding-top: 0.7rem;
@@ -923,6 +962,19 @@
 
   .admin-table__actions {
     justify-content: flex-end;
+    /* Envios tem link + select de status + botão de notificar na mesma
+       célula — em linha única eles estouravam a largura do card. */
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* order:-1 sobe o select pra primeira linha (largura inteira); sem isso
+     ele quebrava sozinho no meio e sobrava uma linha só com o ícone de
+     "ver" e outra só com o botão de notificar — três linhas pra três
+     controles. Agora são duas: select em cima, os dois botões embaixo. */
+  .admin-table__actions .admin-select {
+    flex: 1 1 100%;
+    order: -1;
   }
 }
 
@@ -962,7 +1014,11 @@
   }
 
   .admin-topbar {
-    padding: 1rem 1.2rem;
+    padding: calc(1rem + env(safe-area-inset-top)) 1.2rem 1rem;
+  }
+
+  .admin-topbar__title {
+    font-size: 1.2rem;
   }
 
   .admin-topbar__user span {
@@ -973,7 +1029,7 @@
   }
 
   .admin-content {
-    padding: 1.2rem;
+    padding: 1.2rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom));
   }
 
   .admin-form__linha {
@@ -996,7 +1052,18 @@
   }
 
   .admin-content {
-    padding: 1rem;
+    padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  .admin-topbar__title {
+    font-size: 1.1rem;
+  }
+
+  /* Nome do admin sai da barra: com o título da seção agora ocupando o
+     lado esquerdo, os dois juntos não cabiam — a inicial no avatar já
+     identifica quem está logado. */
+  .admin-topbar__user span {
+    display: none;
   }
 
   .admin-section {
@@ -1025,6 +1092,15 @@
   }
 }
 
+/* O toast é posicionado 96px acima da borda pra não cair atrás da bottom
+   nav da loja — no admin não existe barra inferior nenhuma, então ele
+   ficava flutuando no meio do nada. O :has() mantém a regra restrita às
+   telas do painel: Admin.css continua carregado depois que a pessoa volta
+   pra loja, e um seletor solto vazaria pra lá. */
+body:has(.admin-shell) .toast-stack {
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+}
+
 .confirm-dialog__overlay {
   position: fixed;
   inset: 0;
@@ -1039,9 +1115,11 @@
   align-items: flex-start;
   justify-content: center;
   padding: 1.2rem;
-  padding-top: max(1.2rem, 10vh);
+  padding-top: max(calc(1.2rem + env(safe-area-inset-top)), 10vh);
+  padding-bottom: calc(1.2rem + env(safe-area-inset-bottom));
   z-index: 60;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .confirm-dialog {
